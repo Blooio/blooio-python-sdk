@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.1 (2025-11-04)
+
+Full Changelog: [v1.0.0...v1.0.1](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.0...v1.0.1)
+
+### Bug Fixes
+
+* **client:** close streams without requiring full consumption ([145afcd](https://github.com/Blooio/blooio-python-sdk/commit/145afcd5e6669103ed6066ebcfae0c4930f3d82b))
+
+
+### Chores
+
+* **internal/tests:** avoid race condition with implicit client cleanup ([3d808c8](https://github.com/Blooio/blooio-python-sdk/commit/3d808c8070ccca32d19887b0dddf965ea53bcd04))
+* **internal:** grammar fix (it's -&gt; its) ([be60d3b](https://github.com/Blooio/blooio-python-sdk/commit/be60d3b2f9cd4f51c92472a16e8153595aa1c8dd))
+
 ## 1.0.0 (2025-10-17)
 
 Full Changelog: [v0.0.1...v1.0.0](https://github.com/Blooio/blooio-python-sdk/compare/v0.0.1...v1.0.0)
