@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.2 (2025-11-22)
+
+Full Changelog: [v1.0.1...v1.0.2](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.1...v1.0.2)
+
+### Bug Fixes
+
+* compat with Python 3.14 ([2c8e789](https://github.com/Blooio/blooio-python-sdk/commit/2c8e789b083bf5f4049214cc475de071495f902f))
+* **compat:** update signatures of `model_dump` and `model_dump_json` for Pydantic v1 ([efacbb6](https://github.com/Blooio/blooio-python-sdk/commit/efacbb66a2b9329eb4461561e38f5838d37b1087))
+
+
+### Chores
+
+* add Python 3.14 classifier and testing ([dd2ed6b](https://github.com/Blooio/blooio-python-sdk/commit/dd2ed6bc4918462d334a869270f496e5dce653a5))
+* **package:** drop Python 3.8 support ([19cbcd0](https://github.com/Blooio/blooio-python-sdk/commit/19cbcd0ce4d5dd3626fff4cd02094b3d9bf69f48))
+
 ## 1.0.1 (2025-11-04)
 
 Full Changelog: [v1.0.0...v1.0.1](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.0...v1.0.1)
