@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.3 (2025-12-03)
+
+Full Changelog: [v1.0.2...v1.0.3](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.2...v1.0.3)
+
+### Bug Fixes
+
+* ensure streams are always closed ([3a2cc70](https://github.com/Blooio/blooio-python-sdk/commit/3a2cc70ea5a7a492ae9b404e6305bd5deb7d3e0d))
+
+
+### Chores
+
+* **deps:** mypy 1.18.1 has a regression, pin to 1.17 ([a7853af](https://github.com/Blooio/blooio-python-sdk/commit/a7853af591c6af19cce4ed7c04fe953dbfb957bb))
+* **docs:** use environment variables for authentication in code snippets ([9558d99](https://github.com/Blooio/blooio-python-sdk/commit/9558d99532c57a9a4b712a5ed575ebdae753a052))
+* update lockfile ([e7f0120](https://github.com/Blooio/blooio-python-sdk/commit/e7f0120b8b56fb9b73bda0ebc32510fef7fe6701))
+
 ## 1.0.2 (2025-11-22)
 
 Full Changelog: [v1.0.1...v1.0.2](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.1...v1.0.2)
