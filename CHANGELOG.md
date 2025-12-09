@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.4 (2025-12-09)
+
+Full Changelog: [v1.0.3...v1.0.4](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.3...v1.0.4)
+
+### Bug Fixes
+
+* **types:** allow pyright to infer TypedDict types within SequenceNotStr ([eee935c](https://github.com/Blooio/blooio-python-sdk/commit/eee935c823f2d2df52d1baa7c64f2ba4d037a6d4))
+
+
+### Chores
+
+* add missing docstrings ([13eb515](https://github.com/Blooio/blooio-python-sdk/commit/13eb515f29ad4b006df09013e4a491c65c00e6cd))
+
 ## 1.0.3 (2025-12-03)
 
 Full Changelog: [v1.0.2...v1.0.3](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.2...v1.0.3)
