@@ -19,6 +19,8 @@ class Device(BaseModel):
 
 
 class IntegrationDetails(BaseModel):
+    """Integration-specific details (GHL or API integration)."""
+
     customer_webhook_url: Optional[str] = None
     """Webhook URL for API integrations."""
 
@@ -30,6 +32,8 @@ class IntegrationDetails(BaseModel):
 
 
 class Usage(BaseModel):
+    """Usage statistics for this API key."""
+
     inbound_messages: Optional[int] = None
     """Total number of inbound messages."""
 
