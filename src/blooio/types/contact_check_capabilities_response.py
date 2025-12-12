@@ -12,6 +12,8 @@ __all__ = ["ContactCheckCapabilitiesResponse", "Capabilities"]
 
 
 class Capabilities(BaseModel):
+    """Messaging capabilities for this contact."""
+
     imessage: Optional[bool] = None
     """Whether this contact supports iMessage."""
 
