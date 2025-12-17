@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Mapping
+from typing import TYPE_CHECKING, Any, Mapping
 from typing_extensions import Self, override
 
 import httpx
@@ -20,8 +20,8 @@ from ._types import (
     not_given,
 )
 from ._utils import is_given, get_async_library
+from ._compat import cached_property
 from ._version import __version__
-from .resources import me, batches, contacts, messages
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import BlooioError, APIStatusError
 from ._base_client import (
@@ -29,20 +29,19 @@ from ._base_client import (
     SyncAPIClient,
     AsyncAPIClient,
 )
-from .resources.config import config
+
+if TYPE_CHECKING:
+    from .resources import me, config, batches, contacts, messages
+    from .resources.me import MeResource, AsyncMeResource
+    from .resources.batches import BatchesResource, AsyncBatchesResource
+    from .resources.contacts import ContactsResource, AsyncContactsResource
+    from .resources.messages import MessagesResource, AsyncMessagesResource
+    from .resources.config.config import ConfigResource, AsyncConfigResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Blooio", "AsyncBlooio", "Client", "AsyncClient"]
 
 
 class Blooio(SyncAPIClient):
-    me: me.MeResource
-    contacts: contacts.ContactsResource
-    messages: messages.MessagesResource
-    config: config.ConfigResource
-    batches: batches.BatchesResource
-    with_raw_response: BlooioWithRawResponse
-    with_streaming_response: BlooioWithStreamedResponse
-
     # client options
     api_key: str
 
@@ -97,13 +96,43 @@ class Blooio(SyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.me = me.MeResource(self)
-        self.contacts = contacts.ContactsResource(self)
-        self.messages = messages.MessagesResource(self)
-        self.config = config.ConfigResource(self)
-        self.batches = batches.BatchesResource(self)
-        self.with_raw_response = BlooioWithRawResponse(self)
-        self.with_streaming_response = BlooioWithStreamedResponse(self)
+    @cached_property
+    def me(self) -> MeResource:
+        from .resources.me import MeResource
+
+        return MeResource(self)
+
+    @cached_property
+    def contacts(self) -> ContactsResource:
+        from .resources.contacts import ContactsResource
+
+        return ContactsResource(self)
+
+    @cached_property
+    def messages(self) -> MessagesResource:
+        from .resources.messages import MessagesResource
+
+        return MessagesResource(self)
+
+    @cached_property
+    def config(self) -> ConfigResource:
+        from .resources.config import ConfigResource
+
+        return ConfigResource(self)
+
+    @cached_property
+    def batches(self) -> BatchesResource:
+        from .resources.batches import BatchesResource
+
+        return BatchesResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> BlooioWithRawResponse:
+        return BlooioWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> BlooioWithStreamedResponse:
+        return BlooioWithStreamedResponse(self)
 
     @property
     @override
@@ -211,14 +240,6 @@ class Blooio(SyncAPIClient):
 
 
 class AsyncBlooio(AsyncAPIClient):
-    me: me.AsyncMeResource
-    contacts: contacts.AsyncContactsResource
-    messages: messages.AsyncMessagesResource
-    config: config.AsyncConfigResource
-    batches: batches.AsyncBatchesResource
-    with_raw_response: AsyncBlooioWithRawResponse
-    with_streaming_response: AsyncBlooioWithStreamedResponse
-
     # client options
     api_key: str
 
@@ -273,13 +294,43 @@ class AsyncBlooio(AsyncAPIClient):
             _strict_response_validation=_strict_response_validation,
         )
 
-        self.me = me.AsyncMeResource(self)
-        self.contacts = contacts.AsyncContactsResource(self)
-        self.messages = messages.AsyncMessagesResource(self)
-        self.config = config.AsyncConfigResource(self)
-        self.batches = batches.AsyncBatchesResource(self)
-        self.with_raw_response = AsyncBlooioWithRawResponse(self)
-        self.with_streaming_response = AsyncBlooioWithStreamedResponse(self)
+    @cached_property
+    def me(self) -> AsyncMeResource:
+        from .resources.me import AsyncMeResource
+
+        return AsyncMeResource(self)
+
+    @cached_property
+    def contacts(self) -> AsyncContactsResource:
+        from .resources.contacts import AsyncContactsResource
+
+        return AsyncContactsResource(self)
+
+    @cached_property
+    def messages(self) -> AsyncMessagesResource:
+        from .resources.messages import AsyncMessagesResource
+
+        return AsyncMessagesResource(self)
+
+    @cached_property
+    def config(self) -> AsyncConfigResource:
+        from .resources.config import AsyncConfigResource
+
+        return AsyncConfigResource(self)
+
+    @cached_property
+    def batches(self) -> AsyncBatchesResource:
+        from .resources.batches import AsyncBatchesResource
+
+        return AsyncBatchesResource(self)
+
+    @cached_property
+    def with_raw_response(self) -> AsyncBlooioWithRawResponse:
+        return AsyncBlooioWithRawResponse(self)
+
+    @cached_property
+    def with_streaming_response(self) -> AsyncBlooioWithStreamedResponse:
+        return AsyncBlooioWithStreamedResponse(self)
 
     @property
     @override
@@ -387,39 +438,151 @@ class AsyncBlooio(AsyncAPIClient):
 
 
 class BlooioWithRawResponse:
+    _client: Blooio
+
     def __init__(self, client: Blooio) -> None:
-        self.me = me.MeResourceWithRawResponse(client.me)
-        self.contacts = contacts.ContactsResourceWithRawResponse(client.contacts)
-        self.messages = messages.MessagesResourceWithRawResponse(client.messages)
-        self.config = config.ConfigResourceWithRawResponse(client.config)
-        self.batches = batches.BatchesResourceWithRawResponse(client.batches)
+        self._client = client
+
+    @cached_property
+    def me(self) -> me.MeResourceWithRawResponse:
+        from .resources.me import MeResourceWithRawResponse
+
+        return MeResourceWithRawResponse(self._client.me)
+
+    @cached_property
+    def contacts(self) -> contacts.ContactsResourceWithRawResponse:
+        from .resources.contacts import ContactsResourceWithRawResponse
+
+        return ContactsResourceWithRawResponse(self._client.contacts)
+
+    @cached_property
+    def messages(self) -> messages.MessagesResourceWithRawResponse:
+        from .resources.messages import MessagesResourceWithRawResponse
+
+        return MessagesResourceWithRawResponse(self._client.messages)
+
+    @cached_property
+    def config(self) -> config.ConfigResourceWithRawResponse:
+        from .resources.config import ConfigResourceWithRawResponse
+
+        return ConfigResourceWithRawResponse(self._client.config)
+
+    @cached_property
+    def batches(self) -> batches.BatchesResourceWithRawResponse:
+        from .resources.batches import BatchesResourceWithRawResponse
+
+        return BatchesResourceWithRawResponse(self._client.batches)
 
 
 class AsyncBlooioWithRawResponse:
+    _client: AsyncBlooio
+
     def __init__(self, client: AsyncBlooio) -> None:
-        self.me = me.AsyncMeResourceWithRawResponse(client.me)
-        self.contacts = contacts.AsyncContactsResourceWithRawResponse(client.contacts)
-        self.messages = messages.AsyncMessagesResourceWithRawResponse(client.messages)
-        self.config = config.AsyncConfigResourceWithRawResponse(client.config)
-        self.batches = batches.AsyncBatchesResourceWithRawResponse(client.batches)
+        self._client = client
+
+    @cached_property
+    def me(self) -> me.AsyncMeResourceWithRawResponse:
+        from .resources.me import AsyncMeResourceWithRawResponse
+
+        return AsyncMeResourceWithRawResponse(self._client.me)
+
+    @cached_property
+    def contacts(self) -> contacts.AsyncContactsResourceWithRawResponse:
+        from .resources.contacts import AsyncContactsResourceWithRawResponse
+
+        return AsyncContactsResourceWithRawResponse(self._client.contacts)
+
+    @cached_property
+    def messages(self) -> messages.AsyncMessagesResourceWithRawResponse:
+        from .resources.messages import AsyncMessagesResourceWithRawResponse
+
+        return AsyncMessagesResourceWithRawResponse(self._client.messages)
+
+    @cached_property
+    def config(self) -> config.AsyncConfigResourceWithRawResponse:
+        from .resources.config import AsyncConfigResourceWithRawResponse
+
+        return AsyncConfigResourceWithRawResponse(self._client.config)
+
+    @cached_property
+    def batches(self) -> batches.AsyncBatchesResourceWithRawResponse:
+        from .resources.batches import AsyncBatchesResourceWithRawResponse
+
+        return AsyncBatchesResourceWithRawResponse(self._client.batches)
 
 
 class BlooioWithStreamedResponse:
+    _client: Blooio
+
     def __init__(self, client: Blooio) -> None:
-        self.me = me.MeResourceWithStreamingResponse(client.me)
-        self.contacts = contacts.ContactsResourceWithStreamingResponse(client.contacts)
-        self.messages = messages.MessagesResourceWithStreamingResponse(client.messages)
-        self.config = config.ConfigResourceWithStreamingResponse(client.config)
-        self.batches = batches.BatchesResourceWithStreamingResponse(client.batches)
+        self._client = client
+
+    @cached_property
+    def me(self) -> me.MeResourceWithStreamingResponse:
+        from .resources.me import MeResourceWithStreamingResponse
+
+        return MeResourceWithStreamingResponse(self._client.me)
+
+    @cached_property
+    def contacts(self) -> contacts.ContactsResourceWithStreamingResponse:
+        from .resources.contacts import ContactsResourceWithStreamingResponse
+
+        return ContactsResourceWithStreamingResponse(self._client.contacts)
+
+    @cached_property
+    def messages(self) -> messages.MessagesResourceWithStreamingResponse:
+        from .resources.messages import MessagesResourceWithStreamingResponse
+
+        return MessagesResourceWithStreamingResponse(self._client.messages)
+
+    @cached_property
+    def config(self) -> config.ConfigResourceWithStreamingResponse:
+        from .resources.config import ConfigResourceWithStreamingResponse
+
+        return ConfigResourceWithStreamingResponse(self._client.config)
+
+    @cached_property
+    def batches(self) -> batches.BatchesResourceWithStreamingResponse:
+        from .resources.batches import BatchesResourceWithStreamingResponse
+
+        return BatchesResourceWithStreamingResponse(self._client.batches)
 
 
 class AsyncBlooioWithStreamedResponse:
+    _client: AsyncBlooio
+
     def __init__(self, client: AsyncBlooio) -> None:
-        self.me = me.AsyncMeResourceWithStreamingResponse(client.me)
-        self.contacts = contacts.AsyncContactsResourceWithStreamingResponse(client.contacts)
-        self.messages = messages.AsyncMessagesResourceWithStreamingResponse(client.messages)
-        self.config = config.AsyncConfigResourceWithStreamingResponse(client.config)
-        self.batches = batches.AsyncBatchesResourceWithStreamingResponse(client.batches)
+        self._client = client
+
+    @cached_property
+    def me(self) -> me.AsyncMeResourceWithStreamingResponse:
+        from .resources.me import AsyncMeResourceWithStreamingResponse
+
+        return AsyncMeResourceWithStreamingResponse(self._client.me)
+
+    @cached_property
+    def contacts(self) -> contacts.AsyncContactsResourceWithStreamingResponse:
+        from .resources.contacts import AsyncContactsResourceWithStreamingResponse
+
+        return AsyncContactsResourceWithStreamingResponse(self._client.contacts)
+
+    @cached_property
+    def messages(self) -> messages.AsyncMessagesResourceWithStreamingResponse:
+        from .resources.messages import AsyncMessagesResourceWithStreamingResponse
+
+        return AsyncMessagesResourceWithStreamingResponse(self._client.messages)
+
+    @cached_property
+    def config(self) -> config.AsyncConfigResourceWithStreamingResponse:
+        from .resources.config import AsyncConfigResourceWithStreamingResponse
+
+        return AsyncConfigResourceWithStreamingResponse(self._client.config)
+
+    @cached_property
+    def batches(self) -> batches.AsyncBatchesResourceWithStreamingResponse:
+        from .resources.batches import AsyncBatchesResourceWithStreamingResponse
+
+        return AsyncBatchesResourceWithStreamingResponse(self._client.batches)
 
 
 Client = Blooio
