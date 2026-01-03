@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.5 (2025-12-19)
+
+Full Changelog: [v1.0.4...v1.0.5](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.4...v1.0.5)
+
+### Bug Fixes
+
+* use async_to_httpx_files in patch method ([b6502ac](https://github.com/Blooio/blooio-python-sdk/commit/b6502acc9bf7d875b8c122b4560ca6f592ccb07f))
+
+
+### Chores
+
+* **internal:** add `--fix` argument to lint script ([18f419d](https://github.com/Blooio/blooio-python-sdk/commit/18f419d1a0fa01d20d635c848ed33f78d0fefda9))
+* **internal:** add missing files argument to base client ([ba6fc65](https://github.com/Blooio/blooio-python-sdk/commit/ba6fc65657b77abc6fc59aed3053e3d3d4c6ec84))
+* speedup initial import ([512dd39](https://github.com/Blooio/blooio-python-sdk/commit/512dd3980296e17dcc7e02f508a295ff5e498d8d))
+
 ## 1.0.4 (2025-12-09)
 
 Full Changelog: [v1.0.3...v1.0.4](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.3...v1.0.4)
