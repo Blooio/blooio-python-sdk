@@ -15,13 +15,13 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestBatches:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create(self, client: Blooio) -> None:
         batch = client.batches.create()
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_create(self, client: Blooio) -> None:
         response = client.batches.with_raw_response.create()
@@ -31,7 +31,7 @@ class TestBatches:
         batch = response.parse()
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_create(self, client: Blooio) -> None:
         with client.batches.with_streaming_response.create() as response:
@@ -43,7 +43,7 @@ class TestBatches:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_retrieve(self, client: Blooio) -> None:
         batch = client.batches.retrieve(
@@ -51,7 +51,7 @@ class TestBatches:
         )
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_retrieve(self, client: Blooio) -> None:
         response = client.batches.with_raw_response.retrieve(
@@ -63,7 +63,7 @@ class TestBatches:
         batch = response.parse()
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_retrieve(self, client: Blooio) -> None:
         with client.batches.with_streaming_response.retrieve(
@@ -77,7 +77,7 @@ class TestBatches:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_retrieve(self, client: Blooio) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `batch_id` but received ''"):
@@ -85,7 +85,7 @@ class TestBatches:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_list_messages(self, client: Blooio) -> None:
         batch = client.batches.list_messages(
@@ -93,7 +93,7 @@ class TestBatches:
         )
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_list_messages(self, client: Blooio) -> None:
         response = client.batches.with_raw_response.list_messages(
@@ -105,7 +105,7 @@ class TestBatches:
         batch = response.parse()
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_list_messages(self, client: Blooio) -> None:
         with client.batches.with_streaming_response.list_messages(
@@ -119,7 +119,7 @@ class TestBatches:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_list_messages(self, client: Blooio) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `batch_id` but received ''"):
@@ -127,7 +127,7 @@ class TestBatches:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_retrieve_status(self, client: Blooio) -> None:
         batch = client.batches.retrieve_status(
@@ -135,7 +135,7 @@ class TestBatches:
         )
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_retrieve_status(self, client: Blooio) -> None:
         response = client.batches.with_raw_response.retrieve_status(
@@ -147,7 +147,7 @@ class TestBatches:
         batch = response.parse()
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_retrieve_status(self, client: Blooio) -> None:
         with client.batches.with_streaming_response.retrieve_status(
@@ -161,7 +161,7 @@ class TestBatches:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_retrieve_status(self, client: Blooio) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `batch_id` but received ''"):
@@ -175,13 +175,13 @@ class TestAsyncBatches:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create(self, async_client: AsyncBlooio) -> None:
         batch = await async_client.batches.create()
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncBlooio) -> None:
         response = await async_client.batches.with_raw_response.create()
@@ -191,7 +191,7 @@ class TestAsyncBatches:
         batch = await response.parse()
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncBlooio) -> None:
         async with async_client.batches.with_streaming_response.create() as response:
@@ -203,7 +203,7 @@ class TestAsyncBatches:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncBlooio) -> None:
         batch = await async_client.batches.retrieve(
@@ -211,7 +211,7 @@ class TestAsyncBatches:
         )
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncBlooio) -> None:
         response = await async_client.batches.with_raw_response.retrieve(
@@ -223,7 +223,7 @@ class TestAsyncBatches:
         batch = await response.parse()
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncBlooio) -> None:
         async with async_client.batches.with_streaming_response.retrieve(
@@ -237,7 +237,7 @@ class TestAsyncBatches:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_retrieve(self, async_client: AsyncBlooio) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `batch_id` but received ''"):
@@ -245,7 +245,7 @@ class TestAsyncBatches:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_list_messages(self, async_client: AsyncBlooio) -> None:
         batch = await async_client.batches.list_messages(
@@ -253,7 +253,7 @@ class TestAsyncBatches:
         )
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_list_messages(self, async_client: AsyncBlooio) -> None:
         response = await async_client.batches.with_raw_response.list_messages(
@@ -265,7 +265,7 @@ class TestAsyncBatches:
         batch = await response.parse()
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_list_messages(self, async_client: AsyncBlooio) -> None:
         async with async_client.batches.with_streaming_response.list_messages(
@@ -279,7 +279,7 @@ class TestAsyncBatches:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_list_messages(self, async_client: AsyncBlooio) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `batch_id` but received ''"):
@@ -287,7 +287,7 @@ class TestAsyncBatches:
                 "",
             )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_retrieve_status(self, async_client: AsyncBlooio) -> None:
         batch = await async_client.batches.retrieve_status(
@@ -295,7 +295,7 @@ class TestAsyncBatches:
         )
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_retrieve_status(self, async_client: AsyncBlooio) -> None:
         response = await async_client.batches.with_raw_response.retrieve_status(
@@ -307,7 +307,7 @@ class TestAsyncBatches:
         batch = await response.parse()
         assert batch is None
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_retrieve_status(self, async_client: AsyncBlooio) -> None:
         async with async_client.batches.with_streaming_response.retrieve_status(
@@ -321,7 +321,7 @@ class TestAsyncBatches:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_retrieve_status(self, async_client: AsyncBlooio) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `batch_id` but received ''"):

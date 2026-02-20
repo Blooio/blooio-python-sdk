@@ -17,7 +17,7 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestContacts:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_check_capabilities(self, client: Blooio) -> None:
         contact = client.contacts.check_capabilities(
@@ -25,7 +25,7 @@ class TestContacts:
         )
         assert_matches_type(ContactCheckCapabilitiesResponse, contact, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_check_capabilities(self, client: Blooio) -> None:
         response = client.contacts.with_raw_response.check_capabilities(
@@ -37,7 +37,7 @@ class TestContacts:
         contact = response.parse()
         assert_matches_type(ContactCheckCapabilitiesResponse, contact, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_check_capabilities(self, client: Blooio) -> None:
         with client.contacts.with_streaming_response.check_capabilities(
@@ -51,7 +51,7 @@ class TestContacts:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_path_params_check_capabilities(self, client: Blooio) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `contact` but received ''"):
@@ -65,7 +65,7 @@ class TestAsyncContacts:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_check_capabilities(self, async_client: AsyncBlooio) -> None:
         contact = await async_client.contacts.check_capabilities(
@@ -73,7 +73,7 @@ class TestAsyncContacts:
         )
         assert_matches_type(ContactCheckCapabilitiesResponse, contact, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_check_capabilities(self, async_client: AsyncBlooio) -> None:
         response = await async_client.contacts.with_raw_response.check_capabilities(
@@ -85,7 +85,7 @@ class TestAsyncContacts:
         contact = await response.parse()
         assert_matches_type(ContactCheckCapabilitiesResponse, contact, path=["response"])
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_check_capabilities(self, async_client: AsyncBlooio) -> None:
         async with async_client.contacts.with_streaming_response.check_capabilities(
@@ -99,7 +99,7 @@ class TestAsyncContacts:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Prism tests are disabled")
+    @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_path_params_check_capabilities(self, async_client: AsyncBlooio) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `contact` but received ''"):
