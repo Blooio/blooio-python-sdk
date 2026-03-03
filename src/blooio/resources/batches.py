@@ -19,6 +19,8 @@ __all__ = ["BatchesResource", "AsyncBatchesResource"]
 
 
 class BatchesResource(SyncAPIResource):
+    """Bulk/batch operations (stubbed)"""
+
     @cached_property
     def with_raw_response(self) -> BatchesResourceWithRawResponse:
         """
@@ -162,6 +164,8 @@ class BatchesResource(SyncAPIResource):
 
 
 class AsyncBatchesResource(AsyncAPIResource):
+    """Bulk/batch operations (stubbed)"""
+
     @cached_property
     def with_raw_response(self) -> AsyncBatchesResourceWithRawResponse:
         """

@@ -23,6 +23,8 @@ __all__ = ["WebhookResource", "AsyncWebhookResource"]
 
 
 class WebhookResource(SyncAPIResource):
+    """Account-level configuration"""
+
     @cached_property
     def with_raw_response(self) -> WebhookResourceWithRawResponse:
         """
@@ -106,6 +108,8 @@ class WebhookResource(SyncAPIResource):
 
 
 class AsyncWebhookResource(AsyncAPIResource):
+    """Account-level configuration"""
+
     @cached_property
     def with_raw_response(self) -> AsyncWebhookResourceWithRawResponse:
         """

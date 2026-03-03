@@ -98,18 +98,21 @@ class Blooio(SyncAPIClient):
 
     @cached_property
     def me(self) -> MeResource:
+        """Account and API key information"""
         from .resources.me import MeResource
 
         return MeResource(self)
 
     @cached_property
     def contacts(self) -> ContactsResource:
+        """Contact-related operations"""
         from .resources.contacts import ContactsResource
 
         return ContactsResource(self)
 
     @cached_property
     def messages(self) -> MessagesResource:
+        """Send and manage individual messages"""
         from .resources.messages import MessagesResource
 
         return MessagesResource(self)
@@ -122,6 +125,7 @@ class Blooio(SyncAPIClient):
 
     @cached_property
     def batches(self) -> BatchesResource:
+        """Bulk/batch operations (stubbed)"""
         from .resources.batches import BatchesResource
 
         return BatchesResource(self)
@@ -296,18 +300,21 @@ class AsyncBlooio(AsyncAPIClient):
 
     @cached_property
     def me(self) -> AsyncMeResource:
+        """Account and API key information"""
         from .resources.me import AsyncMeResource
 
         return AsyncMeResource(self)
 
     @cached_property
     def contacts(self) -> AsyncContactsResource:
+        """Contact-related operations"""
         from .resources.contacts import AsyncContactsResource
 
         return AsyncContactsResource(self)
 
     @cached_property
     def messages(self) -> AsyncMessagesResource:
+        """Send and manage individual messages"""
         from .resources.messages import AsyncMessagesResource
 
         return AsyncMessagesResource(self)
@@ -320,6 +327,7 @@ class AsyncBlooio(AsyncAPIClient):
 
     @cached_property
     def batches(self) -> AsyncBatchesResource:
+        """Bulk/batch operations (stubbed)"""
         from .resources.batches import AsyncBatchesResource
 
         return AsyncBatchesResource(self)
@@ -445,18 +453,21 @@ class BlooioWithRawResponse:
 
     @cached_property
     def me(self) -> me.MeResourceWithRawResponse:
+        """Account and API key information"""
         from .resources.me import MeResourceWithRawResponse
 
         return MeResourceWithRawResponse(self._client.me)
 
     @cached_property
     def contacts(self) -> contacts.ContactsResourceWithRawResponse:
+        """Contact-related operations"""
         from .resources.contacts import ContactsResourceWithRawResponse
 
         return ContactsResourceWithRawResponse(self._client.contacts)
 
     @cached_property
     def messages(self) -> messages.MessagesResourceWithRawResponse:
+        """Send and manage individual messages"""
         from .resources.messages import MessagesResourceWithRawResponse
 
         return MessagesResourceWithRawResponse(self._client.messages)
@@ -469,6 +480,7 @@ class BlooioWithRawResponse:
 
     @cached_property
     def batches(self) -> batches.BatchesResourceWithRawResponse:
+        """Bulk/batch operations (stubbed)"""
         from .resources.batches import BatchesResourceWithRawResponse
 
         return BatchesResourceWithRawResponse(self._client.batches)
@@ -482,18 +494,21 @@ class AsyncBlooioWithRawResponse:
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithRawResponse:
+        """Account and API key information"""
         from .resources.me import AsyncMeResourceWithRawResponse
 
         return AsyncMeResourceWithRawResponse(self._client.me)
 
     @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithRawResponse:
+        """Contact-related operations"""
         from .resources.contacts import AsyncContactsResourceWithRawResponse
 
         return AsyncContactsResourceWithRawResponse(self._client.contacts)
 
     @cached_property
     def messages(self) -> messages.AsyncMessagesResourceWithRawResponse:
+        """Send and manage individual messages"""
         from .resources.messages import AsyncMessagesResourceWithRawResponse
 
         return AsyncMessagesResourceWithRawResponse(self._client.messages)
@@ -506,6 +521,7 @@ class AsyncBlooioWithRawResponse:
 
     @cached_property
     def batches(self) -> batches.AsyncBatchesResourceWithRawResponse:
+        """Bulk/batch operations (stubbed)"""
         from .resources.batches import AsyncBatchesResourceWithRawResponse
 
         return AsyncBatchesResourceWithRawResponse(self._client.batches)
@@ -519,18 +535,21 @@ class BlooioWithStreamedResponse:
 
     @cached_property
     def me(self) -> me.MeResourceWithStreamingResponse:
+        """Account and API key information"""
         from .resources.me import MeResourceWithStreamingResponse
 
         return MeResourceWithStreamingResponse(self._client.me)
 
     @cached_property
     def contacts(self) -> contacts.ContactsResourceWithStreamingResponse:
+        """Contact-related operations"""
         from .resources.contacts import ContactsResourceWithStreamingResponse
 
         return ContactsResourceWithStreamingResponse(self._client.contacts)
 
     @cached_property
     def messages(self) -> messages.MessagesResourceWithStreamingResponse:
+        """Send and manage individual messages"""
         from .resources.messages import MessagesResourceWithStreamingResponse
 
         return MessagesResourceWithStreamingResponse(self._client.messages)
@@ -543,6 +562,7 @@ class BlooioWithStreamedResponse:
 
     @cached_property
     def batches(self) -> batches.BatchesResourceWithStreamingResponse:
+        """Bulk/batch operations (stubbed)"""
         from .resources.batches import BatchesResourceWithStreamingResponse
 
         return BatchesResourceWithStreamingResponse(self._client.batches)
@@ -556,18 +576,21 @@ class AsyncBlooioWithStreamedResponse:
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithStreamingResponse:
+        """Account and API key information"""
         from .resources.me import AsyncMeResourceWithStreamingResponse
 
         return AsyncMeResourceWithStreamingResponse(self._client.me)
 
     @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithStreamingResponse:
+        """Contact-related operations"""
         from .resources.contacts import AsyncContactsResourceWithStreamingResponse
 
         return AsyncContactsResourceWithStreamingResponse(self._client.contacts)
 
     @cached_property
     def messages(self) -> messages.AsyncMessagesResourceWithStreamingResponse:
+        """Send and manage individual messages"""
         from .resources.messages import AsyncMessagesResourceWithStreamingResponse
 
         return AsyncMessagesResourceWithStreamingResponse(self._client.messages)
@@ -580,6 +603,7 @@ class AsyncBlooioWithStreamedResponse:
 
     @cached_property
     def batches(self) -> batches.AsyncBatchesResourceWithStreamingResponse:
+        """Bulk/batch operations (stubbed)"""
         from .resources.batches import AsyncBatchesResourceWithStreamingResponse
 
         return AsyncBatchesResourceWithStreamingResponse(self._client.batches)
