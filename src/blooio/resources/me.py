@@ -20,6 +20,8 @@ __all__ = ["MeResource", "AsyncMeResource"]
 
 
 class MeResource(SyncAPIResource):
+    """Account and API key information"""
+
     @cached_property
     def with_raw_response(self) -> MeResourceWithRawResponse:
         """
@@ -63,6 +65,8 @@ class MeResource(SyncAPIResource):
 
 
 class AsyncMeResource(AsyncAPIResource):
+    """Account and API key information"""
+
     @cached_property
     def with_raw_response(self) -> AsyncMeResourceWithRawResponse:
         """

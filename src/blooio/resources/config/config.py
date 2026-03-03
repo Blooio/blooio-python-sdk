@@ -19,6 +19,7 @@ __all__ = ["ConfigResource", "AsyncConfigResource"]
 class ConfigResource(SyncAPIResource):
     @cached_property
     def webhook(self) -> WebhookResource:
+        """Account-level configuration"""
         return WebhookResource(self._client)
 
     @cached_property
@@ -44,6 +45,7 @@ class ConfigResource(SyncAPIResource):
 class AsyncConfigResource(AsyncAPIResource):
     @cached_property
     def webhook(self) -> AsyncWebhookResource:
+        """Account-level configuration"""
         return AsyncWebhookResource(self._client)
 
     @cached_property
@@ -72,6 +74,7 @@ class ConfigResourceWithRawResponse:
 
     @cached_property
     def webhook(self) -> WebhookResourceWithRawResponse:
+        """Account-level configuration"""
         return WebhookResourceWithRawResponse(self._config.webhook)
 
 
@@ -81,6 +84,7 @@ class AsyncConfigResourceWithRawResponse:
 
     @cached_property
     def webhook(self) -> AsyncWebhookResourceWithRawResponse:
+        """Account-level configuration"""
         return AsyncWebhookResourceWithRawResponse(self._config.webhook)
 
 
@@ -90,6 +94,7 @@ class ConfigResourceWithStreamingResponse:
 
     @cached_property
     def webhook(self) -> WebhookResourceWithStreamingResponse:
+        """Account-level configuration"""
         return WebhookResourceWithStreamingResponse(self._config.webhook)
 
 
@@ -99,4 +104,5 @@ class AsyncConfigResourceWithStreamingResponse:
 
     @cached_property
     def webhook(self) -> AsyncWebhookResourceWithStreamingResponse:
+        """Account-level configuration"""
         return AsyncWebhookResourceWithStreamingResponse(self._config.webhook)

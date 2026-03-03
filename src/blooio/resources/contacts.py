@@ -20,6 +20,8 @@ __all__ = ["ContactsResource", "AsyncContactsResource"]
 
 
 class ContactsResource(SyncAPIResource):
+    """Contact-related operations"""
+
     @cached_property
     def with_raw_response(self) -> ContactsResourceWithRawResponse:
         """
@@ -75,6 +77,8 @@ class ContactsResource(SyncAPIResource):
 
 
 class AsyncContactsResource(AsyncAPIResource):
+    """Contact-related operations"""
+
     @cached_property
     def with_raw_response(self) -> AsyncContactsResourceWithRawResponse:
         """
