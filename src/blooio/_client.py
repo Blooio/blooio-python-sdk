@@ -19,8 +19,13 @@ from ._types import (
     RequestOptions,
     not_given,
 )
-from ._utils import is_given, get_async_library
+from ._utils import (
+    is_given,
+    is_mapping_t,
+    get_async_library,
+)
 from ._compat import cached_property
+from ._models import SecurityOptions
 from ._version import __version__
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import BlooioError, APIStatusError
@@ -31,12 +36,15 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import me, config, batches, contacts, messages
-    from .resources.me import MeResource, AsyncMeResource
-    from .resources.batches import BatchesResource, AsyncBatchesResource
-    from .resources.contacts import ContactsResource, AsyncContactsResource
-    from .resources.messages import MessagesResource, AsyncMessagesResource
-    from .resources.config.config import ConfigResource, AsyncConfigResource
+    from .resources import me, chats, groups, contacts, facetime, location, webhooks, phone_numbers
+    from .resources.me.me import MeResource, AsyncMeResource
+    from .resources.facetime import FacetimeResource, AsyncFacetimeResource
+    from .resources.chats.chats import ChatsResource, AsyncChatsResource
+    from .resources.groups.groups import GroupsResource, AsyncGroupsResource
+    from .resources.contacts.contacts import ContactsResource, AsyncContactsResource
+    from .resources.location.location import LocationResource, AsyncLocationResource
+    from .resources.webhooks.webhooks import WebhooksResource, AsyncWebhooksResource
+    from .resources.phone_numbers.phone_numbers import PhoneNumbersResource, AsyncPhoneNumbersResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Blooio", "AsyncBlooio", "Client", "AsyncClient"]
 
@@ -83,7 +91,16 @@ class Blooio(SyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("BLOOIO_BASE_URL")
         if base_url is None:
-            base_url = f"https://backend.blooio.com"
+            base_url = f"https://backend.blooio.com/v2/api"
+
+        custom_headers_env = os.environ.get("BLOOIO_CUSTOM_HEADERS")
+        if custom_headers_env is not None:
+            parsed: dict[str, str] = {}
+            for line in custom_headers_env.split("\n"):
+                colon = line.find(":")
+                if colon >= 0:
+                    parsed[line[:colon].strip()] = line[colon + 1 :].strip()
+            default_headers = {**parsed, **(default_headers if is_mapping_t(default_headers) else {})}
 
         super().__init__(
             version=__version__,
@@ -98,37 +115,60 @@ class Blooio(SyncAPIClient):
 
     @cached_property
     def me(self) -> MeResource:
-        """Account and API key information"""
+        """Authentication and account information"""
         from .resources.me import MeResource
 
         return MeResource(self)
 
     @cached_property
     def contacts(self) -> ContactsResource:
-        """Contact-related operations"""
+        """Manage contacts (phone numbers and emails)"""
         from .resources.contacts import ContactsResource
 
         return ContactsResource(self)
 
     @cached_property
-    def messages(self) -> MessagesResource:
-        """Send and manage individual messages"""
-        from .resources.messages import MessagesResource
+    def location(self) -> LocationResource:
+        from .resources.location import LocationResource
 
-        return MessagesResource(self)
-
-    @cached_property
-    def config(self) -> ConfigResource:
-        from .resources.config import ConfigResource
-
-        return ConfigResource(self)
+        return LocationResource(self)
 
     @cached_property
-    def batches(self) -> BatchesResource:
-        """Bulk/batch operations (stubbed)"""
-        from .resources.batches import BatchesResource
+    def facetime(self) -> FacetimeResource:
+        """Initiate FaceTime calls"""
+        from .resources.facetime import FacetimeResource
 
-        return BatchesResource(self)
+        return FacetimeResource(self)
+
+    @cached_property
+    def groups(self) -> GroupsResource:
+        """Manage contact groups"""
+        from .resources.groups import GroupsResource
+
+        return GroupsResource(self)
+
+    @cached_property
+    def webhooks(self) -> WebhooksResource:
+        """Manage webhook subscriptions"""
+        from .resources.webhooks import WebhooksResource
+
+        return WebhooksResource(self)
+
+    @cached_property
+    def chats(self) -> ChatsResource:
+        from .resources.chats import ChatsResource
+
+        return ChatsResource(self)
+
+    @cached_property
+    def phone_numbers(self) -> PhoneNumbersResource:
+        """Phone number validation, formatting, and NANPA geocoding.
+
+        Requires an Enterprise plan (Dedicated Enterprise).
+        """
+        from .resources.phone_numbers import PhoneNumbersResource
+
+        return PhoneNumbersResource(self)
 
     @cached_property
     def with_raw_response(self) -> BlooioWithRawResponse:
@@ -143,9 +183,14 @@ class Blooio(SyncAPIClient):
     def qs(self) -> Querystring:
         return Querystring(array_format="comma")
 
-    @property
     @override
-    def auth_headers(self) -> dict[str, str]:
+    def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
+        return {
+            **(self._bearer_auth if security.get("bearer_auth", False) else {}),
+        }
+
+    @property
+    def _bearer_auth(self) -> dict[str, str]:
         api_key = self.api_key
         return {"Authorization": f"Bearer {api_key}"}
 
@@ -285,7 +330,16 @@ class AsyncBlooio(AsyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("BLOOIO_BASE_URL")
         if base_url is None:
-            base_url = f"https://backend.blooio.com"
+            base_url = f"https://backend.blooio.com/v2/api"
+
+        custom_headers_env = os.environ.get("BLOOIO_CUSTOM_HEADERS")
+        if custom_headers_env is not None:
+            parsed: dict[str, str] = {}
+            for line in custom_headers_env.split("\n"):
+                colon = line.find(":")
+                if colon >= 0:
+                    parsed[line[:colon].strip()] = line[colon + 1 :].strip()
+            default_headers = {**parsed, **(default_headers if is_mapping_t(default_headers) else {})}
 
         super().__init__(
             version=__version__,
@@ -300,37 +354,60 @@ class AsyncBlooio(AsyncAPIClient):
 
     @cached_property
     def me(self) -> AsyncMeResource:
-        """Account and API key information"""
+        """Authentication and account information"""
         from .resources.me import AsyncMeResource
 
         return AsyncMeResource(self)
 
     @cached_property
     def contacts(self) -> AsyncContactsResource:
-        """Contact-related operations"""
+        """Manage contacts (phone numbers and emails)"""
         from .resources.contacts import AsyncContactsResource
 
         return AsyncContactsResource(self)
 
     @cached_property
-    def messages(self) -> AsyncMessagesResource:
-        """Send and manage individual messages"""
-        from .resources.messages import AsyncMessagesResource
+    def location(self) -> AsyncLocationResource:
+        from .resources.location import AsyncLocationResource
 
-        return AsyncMessagesResource(self)
-
-    @cached_property
-    def config(self) -> AsyncConfigResource:
-        from .resources.config import AsyncConfigResource
-
-        return AsyncConfigResource(self)
+        return AsyncLocationResource(self)
 
     @cached_property
-    def batches(self) -> AsyncBatchesResource:
-        """Bulk/batch operations (stubbed)"""
-        from .resources.batches import AsyncBatchesResource
+    def facetime(self) -> AsyncFacetimeResource:
+        """Initiate FaceTime calls"""
+        from .resources.facetime import AsyncFacetimeResource
 
-        return AsyncBatchesResource(self)
+        return AsyncFacetimeResource(self)
+
+    @cached_property
+    def groups(self) -> AsyncGroupsResource:
+        """Manage contact groups"""
+        from .resources.groups import AsyncGroupsResource
+
+        return AsyncGroupsResource(self)
+
+    @cached_property
+    def webhooks(self) -> AsyncWebhooksResource:
+        """Manage webhook subscriptions"""
+        from .resources.webhooks import AsyncWebhooksResource
+
+        return AsyncWebhooksResource(self)
+
+    @cached_property
+    def chats(self) -> AsyncChatsResource:
+        from .resources.chats import AsyncChatsResource
+
+        return AsyncChatsResource(self)
+
+    @cached_property
+    def phone_numbers(self) -> AsyncPhoneNumbersResource:
+        """Phone number validation, formatting, and NANPA geocoding.
+
+        Requires an Enterprise plan (Dedicated Enterprise).
+        """
+        from .resources.phone_numbers import AsyncPhoneNumbersResource
+
+        return AsyncPhoneNumbersResource(self)
 
     @cached_property
     def with_raw_response(self) -> AsyncBlooioWithRawResponse:
@@ -345,9 +422,14 @@ class AsyncBlooio(AsyncAPIClient):
     def qs(self) -> Querystring:
         return Querystring(array_format="comma")
 
-    @property
     @override
-    def auth_headers(self) -> dict[str, str]:
+    def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
+        return {
+            **(self._bearer_auth if security.get("bearer_auth", False) else {}),
+        }
+
+    @property
+    def _bearer_auth(self) -> dict[str, str]:
         api_key = self.api_key
         return {"Authorization": f"Bearer {api_key}"}
 
@@ -453,37 +535,60 @@ class BlooioWithRawResponse:
 
     @cached_property
     def me(self) -> me.MeResourceWithRawResponse:
-        """Account and API key information"""
+        """Authentication and account information"""
         from .resources.me import MeResourceWithRawResponse
 
         return MeResourceWithRawResponse(self._client.me)
 
     @cached_property
     def contacts(self) -> contacts.ContactsResourceWithRawResponse:
-        """Contact-related operations"""
+        """Manage contacts (phone numbers and emails)"""
         from .resources.contacts import ContactsResourceWithRawResponse
 
         return ContactsResourceWithRawResponse(self._client.contacts)
 
     @cached_property
-    def messages(self) -> messages.MessagesResourceWithRawResponse:
-        """Send and manage individual messages"""
-        from .resources.messages import MessagesResourceWithRawResponse
+    def location(self) -> location.LocationResourceWithRawResponse:
+        from .resources.location import LocationResourceWithRawResponse
 
-        return MessagesResourceWithRawResponse(self._client.messages)
-
-    @cached_property
-    def config(self) -> config.ConfigResourceWithRawResponse:
-        from .resources.config import ConfigResourceWithRawResponse
-
-        return ConfigResourceWithRawResponse(self._client.config)
+        return LocationResourceWithRawResponse(self._client.location)
 
     @cached_property
-    def batches(self) -> batches.BatchesResourceWithRawResponse:
-        """Bulk/batch operations (stubbed)"""
-        from .resources.batches import BatchesResourceWithRawResponse
+    def facetime(self) -> facetime.FacetimeResourceWithRawResponse:
+        """Initiate FaceTime calls"""
+        from .resources.facetime import FacetimeResourceWithRawResponse
 
-        return BatchesResourceWithRawResponse(self._client.batches)
+        return FacetimeResourceWithRawResponse(self._client.facetime)
+
+    @cached_property
+    def groups(self) -> groups.GroupsResourceWithRawResponse:
+        """Manage contact groups"""
+        from .resources.groups import GroupsResourceWithRawResponse
+
+        return GroupsResourceWithRawResponse(self._client.groups)
+
+    @cached_property
+    def webhooks(self) -> webhooks.WebhooksResourceWithRawResponse:
+        """Manage webhook subscriptions"""
+        from .resources.webhooks import WebhooksResourceWithRawResponse
+
+        return WebhooksResourceWithRawResponse(self._client.webhooks)
+
+    @cached_property
+    def chats(self) -> chats.ChatsResourceWithRawResponse:
+        from .resources.chats import ChatsResourceWithRawResponse
+
+        return ChatsResourceWithRawResponse(self._client.chats)
+
+    @cached_property
+    def phone_numbers(self) -> phone_numbers.PhoneNumbersResourceWithRawResponse:
+        """Phone number validation, formatting, and NANPA geocoding.
+
+        Requires an Enterprise plan (Dedicated Enterprise).
+        """
+        from .resources.phone_numbers import PhoneNumbersResourceWithRawResponse
+
+        return PhoneNumbersResourceWithRawResponse(self._client.phone_numbers)
 
 
 class AsyncBlooioWithRawResponse:
@@ -494,37 +599,60 @@ class AsyncBlooioWithRawResponse:
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithRawResponse:
-        """Account and API key information"""
+        """Authentication and account information"""
         from .resources.me import AsyncMeResourceWithRawResponse
 
         return AsyncMeResourceWithRawResponse(self._client.me)
 
     @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithRawResponse:
-        """Contact-related operations"""
+        """Manage contacts (phone numbers and emails)"""
         from .resources.contacts import AsyncContactsResourceWithRawResponse
 
         return AsyncContactsResourceWithRawResponse(self._client.contacts)
 
     @cached_property
-    def messages(self) -> messages.AsyncMessagesResourceWithRawResponse:
-        """Send and manage individual messages"""
-        from .resources.messages import AsyncMessagesResourceWithRawResponse
+    def location(self) -> location.AsyncLocationResourceWithRawResponse:
+        from .resources.location import AsyncLocationResourceWithRawResponse
 
-        return AsyncMessagesResourceWithRawResponse(self._client.messages)
-
-    @cached_property
-    def config(self) -> config.AsyncConfigResourceWithRawResponse:
-        from .resources.config import AsyncConfigResourceWithRawResponse
-
-        return AsyncConfigResourceWithRawResponse(self._client.config)
+        return AsyncLocationResourceWithRawResponse(self._client.location)
 
     @cached_property
-    def batches(self) -> batches.AsyncBatchesResourceWithRawResponse:
-        """Bulk/batch operations (stubbed)"""
-        from .resources.batches import AsyncBatchesResourceWithRawResponse
+    def facetime(self) -> facetime.AsyncFacetimeResourceWithRawResponse:
+        """Initiate FaceTime calls"""
+        from .resources.facetime import AsyncFacetimeResourceWithRawResponse
 
-        return AsyncBatchesResourceWithRawResponse(self._client.batches)
+        return AsyncFacetimeResourceWithRawResponse(self._client.facetime)
+
+    @cached_property
+    def groups(self) -> groups.AsyncGroupsResourceWithRawResponse:
+        """Manage contact groups"""
+        from .resources.groups import AsyncGroupsResourceWithRawResponse
+
+        return AsyncGroupsResourceWithRawResponse(self._client.groups)
+
+    @cached_property
+    def webhooks(self) -> webhooks.AsyncWebhooksResourceWithRawResponse:
+        """Manage webhook subscriptions"""
+        from .resources.webhooks import AsyncWebhooksResourceWithRawResponse
+
+        return AsyncWebhooksResourceWithRawResponse(self._client.webhooks)
+
+    @cached_property
+    def chats(self) -> chats.AsyncChatsResourceWithRawResponse:
+        from .resources.chats import AsyncChatsResourceWithRawResponse
+
+        return AsyncChatsResourceWithRawResponse(self._client.chats)
+
+    @cached_property
+    def phone_numbers(self) -> phone_numbers.AsyncPhoneNumbersResourceWithRawResponse:
+        """Phone number validation, formatting, and NANPA geocoding.
+
+        Requires an Enterprise plan (Dedicated Enterprise).
+        """
+        from .resources.phone_numbers import AsyncPhoneNumbersResourceWithRawResponse
+
+        return AsyncPhoneNumbersResourceWithRawResponse(self._client.phone_numbers)
 
 
 class BlooioWithStreamedResponse:
@@ -535,37 +663,60 @@ class BlooioWithStreamedResponse:
 
     @cached_property
     def me(self) -> me.MeResourceWithStreamingResponse:
-        """Account and API key information"""
+        """Authentication and account information"""
         from .resources.me import MeResourceWithStreamingResponse
 
         return MeResourceWithStreamingResponse(self._client.me)
 
     @cached_property
     def contacts(self) -> contacts.ContactsResourceWithStreamingResponse:
-        """Contact-related operations"""
+        """Manage contacts (phone numbers and emails)"""
         from .resources.contacts import ContactsResourceWithStreamingResponse
 
         return ContactsResourceWithStreamingResponse(self._client.contacts)
 
     @cached_property
-    def messages(self) -> messages.MessagesResourceWithStreamingResponse:
-        """Send and manage individual messages"""
-        from .resources.messages import MessagesResourceWithStreamingResponse
+    def location(self) -> location.LocationResourceWithStreamingResponse:
+        from .resources.location import LocationResourceWithStreamingResponse
 
-        return MessagesResourceWithStreamingResponse(self._client.messages)
-
-    @cached_property
-    def config(self) -> config.ConfigResourceWithStreamingResponse:
-        from .resources.config import ConfigResourceWithStreamingResponse
-
-        return ConfigResourceWithStreamingResponse(self._client.config)
+        return LocationResourceWithStreamingResponse(self._client.location)
 
     @cached_property
-    def batches(self) -> batches.BatchesResourceWithStreamingResponse:
-        """Bulk/batch operations (stubbed)"""
-        from .resources.batches import BatchesResourceWithStreamingResponse
+    def facetime(self) -> facetime.FacetimeResourceWithStreamingResponse:
+        """Initiate FaceTime calls"""
+        from .resources.facetime import FacetimeResourceWithStreamingResponse
 
-        return BatchesResourceWithStreamingResponse(self._client.batches)
+        return FacetimeResourceWithStreamingResponse(self._client.facetime)
+
+    @cached_property
+    def groups(self) -> groups.GroupsResourceWithStreamingResponse:
+        """Manage contact groups"""
+        from .resources.groups import GroupsResourceWithStreamingResponse
+
+        return GroupsResourceWithStreamingResponse(self._client.groups)
+
+    @cached_property
+    def webhooks(self) -> webhooks.WebhooksResourceWithStreamingResponse:
+        """Manage webhook subscriptions"""
+        from .resources.webhooks import WebhooksResourceWithStreamingResponse
+
+        return WebhooksResourceWithStreamingResponse(self._client.webhooks)
+
+    @cached_property
+    def chats(self) -> chats.ChatsResourceWithStreamingResponse:
+        from .resources.chats import ChatsResourceWithStreamingResponse
+
+        return ChatsResourceWithStreamingResponse(self._client.chats)
+
+    @cached_property
+    def phone_numbers(self) -> phone_numbers.PhoneNumbersResourceWithStreamingResponse:
+        """Phone number validation, formatting, and NANPA geocoding.
+
+        Requires an Enterprise plan (Dedicated Enterprise).
+        """
+        from .resources.phone_numbers import PhoneNumbersResourceWithStreamingResponse
+
+        return PhoneNumbersResourceWithStreamingResponse(self._client.phone_numbers)
 
 
 class AsyncBlooioWithStreamedResponse:
@@ -576,37 +727,60 @@ class AsyncBlooioWithStreamedResponse:
 
     @cached_property
     def me(self) -> me.AsyncMeResourceWithStreamingResponse:
-        """Account and API key information"""
+        """Authentication and account information"""
         from .resources.me import AsyncMeResourceWithStreamingResponse
 
         return AsyncMeResourceWithStreamingResponse(self._client.me)
 
     @cached_property
     def contacts(self) -> contacts.AsyncContactsResourceWithStreamingResponse:
-        """Contact-related operations"""
+        """Manage contacts (phone numbers and emails)"""
         from .resources.contacts import AsyncContactsResourceWithStreamingResponse
 
         return AsyncContactsResourceWithStreamingResponse(self._client.contacts)
 
     @cached_property
-    def messages(self) -> messages.AsyncMessagesResourceWithStreamingResponse:
-        """Send and manage individual messages"""
-        from .resources.messages import AsyncMessagesResourceWithStreamingResponse
+    def location(self) -> location.AsyncLocationResourceWithStreamingResponse:
+        from .resources.location import AsyncLocationResourceWithStreamingResponse
 
-        return AsyncMessagesResourceWithStreamingResponse(self._client.messages)
-
-    @cached_property
-    def config(self) -> config.AsyncConfigResourceWithStreamingResponse:
-        from .resources.config import AsyncConfigResourceWithStreamingResponse
-
-        return AsyncConfigResourceWithStreamingResponse(self._client.config)
+        return AsyncLocationResourceWithStreamingResponse(self._client.location)
 
     @cached_property
-    def batches(self) -> batches.AsyncBatchesResourceWithStreamingResponse:
-        """Bulk/batch operations (stubbed)"""
-        from .resources.batches import AsyncBatchesResourceWithStreamingResponse
+    def facetime(self) -> facetime.AsyncFacetimeResourceWithStreamingResponse:
+        """Initiate FaceTime calls"""
+        from .resources.facetime import AsyncFacetimeResourceWithStreamingResponse
 
-        return AsyncBatchesResourceWithStreamingResponse(self._client.batches)
+        return AsyncFacetimeResourceWithStreamingResponse(self._client.facetime)
+
+    @cached_property
+    def groups(self) -> groups.AsyncGroupsResourceWithStreamingResponse:
+        """Manage contact groups"""
+        from .resources.groups import AsyncGroupsResourceWithStreamingResponse
+
+        return AsyncGroupsResourceWithStreamingResponse(self._client.groups)
+
+    @cached_property
+    def webhooks(self) -> webhooks.AsyncWebhooksResourceWithStreamingResponse:
+        """Manage webhook subscriptions"""
+        from .resources.webhooks import AsyncWebhooksResourceWithStreamingResponse
+
+        return AsyncWebhooksResourceWithStreamingResponse(self._client.webhooks)
+
+    @cached_property
+    def chats(self) -> chats.AsyncChatsResourceWithStreamingResponse:
+        from .resources.chats import AsyncChatsResourceWithStreamingResponse
+
+        return AsyncChatsResourceWithStreamingResponse(self._client.chats)
+
+    @cached_property
+    def phone_numbers(self) -> phone_numbers.AsyncPhoneNumbersResourceWithStreamingResponse:
+        """Phone number validation, formatting, and NANPA geocoding.
+
+        Requires an Enterprise plan (Dedicated Enterprise).
+        """
+        from .resources.phone_numbers import AsyncPhoneNumbersResourceWithStreamingResponse
+
+        return AsyncPhoneNumbersResourceWithStreamingResponse(self._client.phone_numbers)
 
 
 Client = Blooio

@@ -11,14 +11,17 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
-The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [blooio.com](https://blooio.com). The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
 ```sh
-# install from PyPI
-pip install blooio
+# install from this staging repo
+pip install git+ssh://git@github.com/stainless-sdks/blooio-python.git
 ```
+
+> [!NOTE]
+> Once this package is [published to PyPI](https://www.stainless.com/docs/guides/publish), this will become: `pip install blooio`
 
 ## Usage
 
@@ -33,7 +36,7 @@ client = Blooio(
 )
 
 me = client.me.retrieve()
-print(me.valid)
+print(me.organization_id)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -57,7 +60,7 @@ client = AsyncBlooio(
 
 async def main() -> None:
     me = await client.me.retrieve()
-    print(me.valid)
+    print(me.organization_id)
 
 
 asyncio.run(main())
@@ -72,8 +75,8 @@ By default, the async client uses `httpx` for HTTP requests. However, for improv
 You can enable this by installing `aiohttp`:
 
 ```sh
-# install from PyPI
-pip install blooio[aiohttp]
+# install from this staging repo
+pip install 'blooio[aiohttp] @ git+ssh://git@github.com/stainless-sdks/blooio-python.git'
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
@@ -91,7 +94,7 @@ async def main() -> None:
         http_client=DefaultAioHttpClient(),
     ) as client:
         me = await client.me.retrieve()
-        print(me.valid)
+        print(me.organization_id)
 
 
 asyncio.run(main())
@@ -105,6 +108,40 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 - Converting to a dictionary, `model.to_dict()`
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
+
+## Nested params
+
+Nested parameters are dictionaries, typed using `TypedDict`, for example:
+
+```python
+from blooio import Blooio
+
+client = Blooio()
+
+contact_card = client.me.numbers.contact_card.update(
+    number="number",
+    sharing={},
+)
+print(contact_card.sharing)
+```
+
+## File uploads
+
+Request parameters that correspond to file uploads can be passed as `bytes`, or a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
+
+```python
+from pathlib import Path
+from blooio import Blooio
+
+client = Blooio()
+
+client.groups.icon.set(
+    group_id="grp_abc123def456",
+    icon=Path("/path/to/file"),
+)
+```
+
+The async client uses the exact same interface. If you pass a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance, the file contents will be read asynchronously automatically.
 
 ## Handling errors
 
@@ -233,12 +270,12 @@ response = client.me.with_raw_response.retrieve()
 print(response.headers.get('X-My-Header'))
 
 me = response.parse()  # get the object that `me.retrieve()` would have returned
-print(me.valid)
+print(me.organization_id)
 ```
 
-These methods return an [`APIResponse`](https://github.com/Blooio/blooio-python-sdk/tree/main/src/blooio/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/stainless-sdks/blooio-python/tree/main/src/blooio/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/Blooio/blooio-python-sdk/tree/main/src/blooio/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/stainless-sdks/blooio-python/tree/main/src/blooio/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -342,7 +379,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/Blooio/blooio-python-sdk/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/blooio-python/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 

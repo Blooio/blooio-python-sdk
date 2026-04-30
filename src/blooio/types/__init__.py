@@ -2,10 +2,36 @@
 
 from __future__ import annotations
 
-from .message_send_params import MessageSendParams as MessageSendParams
+from .group import Group as Group
+from .contact import Contact as Contact
+from .webhook import Webhook as Webhook
+from .pagination import Pagination as Pagination
+from .last_message import LastMessage as LastMessage
+from .delete_response import DeleteResponse as DeleteResponse
+from .chat_list_params import ChatListParams as ChatListParams
+from .group_list_params import GroupListParams as GroupListParams
+from .chat_list_response import ChatListResponse as ChatListResponse
+from .contact_list_params import ContactListParams as ContactListParams
+from .group_create_params import GroupCreateParams as GroupCreateParams
+from .group_list_response import GroupListResponse as GroupListResponse
+from .group_update_params import GroupUpdateParams as GroupUpdateParams
 from .me_retrieve_response import MeRetrieveResponse as MeRetrieveResponse
-from .message_send_response import MessageSendResponse as MessageSendResponse
-from .message_cancel_response import MessageCancelResponse as MessageCancelResponse
-from .message_retrieve_response import MessageRetrieveResponse as MessageRetrieveResponse
-from .message_get_status_response import MessageGetStatusResponse as MessageGetStatusResponse
+from .contact_create_params import ContactCreateParams as ContactCreateParams
+from .contact_list_response import ContactListResponse as ContactListResponse
+from .contact_update_params import ContactUpdateParams as ContactUpdateParams
+from .group_create_response import GroupCreateResponse as GroupCreateResponse
+from .group_delete_response import GroupDeleteResponse as GroupDeleteResponse
+from .group_update_response import GroupUpdateResponse as GroupUpdateResponse
+from .webhook_create_params import WebhookCreateParams as WebhookCreateParams
+from .webhook_list_response import WebhookListResponse as WebhookListResponse
+from .webhook_update_params import WebhookUpdateParams as WebhookUpdateParams
+from .chat_retrieve_response import ChatRetrieveResponse as ChatRetrieveResponse
+from .webhook_create_response import WebhookCreateResponse as WebhookCreateResponse
+from .webhook_delete_response import WebhookDeleteResponse as WebhookDeleteResponse
+from .chat_mark_as_read_response import ChatMarkAsReadResponse as ChatMarkAsReadResponse
+from .facetime_initiate_call_params import FacetimeInitiateCallParams as FacetimeInitiateCallParams
+from .facetime_initiate_call_response import FacetimeInitiateCallResponse as FacetimeInitiateCallResponse
+from .chat_share_contact_card_response import ChatShareContactCardResponse as ChatShareContactCardResponse
+from .phone_number_batch_create_params import PhoneNumberBatchCreateParams as PhoneNumberBatchCreateParams
+from .phone_number_batch_create_response import PhoneNumberBatchCreateResponse as PhoneNumberBatchCreateResponse
 from .contact_check_capabilities_response import ContactCheckCapabilitiesResponse as ContactCheckCapabilitiesResponse

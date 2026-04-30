@@ -1,10 +1,7 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import Optional
-from datetime import datetime
 from typing_extensions import Literal
-
-from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
 
@@ -12,27 +9,23 @@ __all__ = ["ContactCheckCapabilitiesResponse", "Capabilities"]
 
 
 class Capabilities(BaseModel):
-    """Messaging capabilities for this contact."""
+    facetime: Optional[bool] = None
+    """Whether FaceTime is available"""
 
     imessage: Optional[bool] = None
-    """Whether this contact supports iMessage."""
+    """Whether iMessage is available"""
 
     sms: Optional[bool] = None
-    """
-    Whether this contact supports SMS (always true for phone numbers, false for
-    emails).
-    """
+    """Whether SMS is available (phone only)"""
 
 
 class ContactCheckCapabilitiesResponse(BaseModel):
     capabilities: Optional[Capabilities] = None
-    """Messaging capabilities for this contact."""
 
     contact: Optional[str] = None
-    """The contact identifier (phone number or email)."""
+    """Normalized contact identifier"""
 
-    last_checked: Optional[datetime] = FieldInfo(alias="lastChecked", default=None)
-    """ISO 8601 timestamp of when capabilities were last checked."""
+    last_checked: Optional[int] = None
+    """Timestamp when capabilities were checked"""
 
     type: Optional[Literal["phone", "email"]] = None
-    """Type of contact identifier."""
