@@ -1,5 +1,32 @@
 # Changelog
 
+## 1.1.0 (2026-04-30)
+
+Full Changelog: [v1.0.5...v1.1.0](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.5...v1.1.0)
+
+### Features
+
+* **api:** manual updates ([9d3f025](https://github.com/Blooio/blooio-python-sdk/commit/9d3f02507a83ab0e91689709e85ba1dccefba362))
+* **client:** add custom JSON encoder for extended type support ([c02699e](https://github.com/Blooio/blooio-python-sdk/commit/c02699e0bb5a7411efe9ba37898f74bce58fc4a8))
+* **client:** add support for binary request streaming ([0a46f0a](https://github.com/Blooio/blooio-python-sdk/commit/0a46f0a17f78a2a21aae637af66fb6b5671c12c5))
+
+
+### Chores
+
+* **ci:** upgrade `actions/github-script` ([5e006c2](https://github.com/Blooio/blooio-python-sdk/commit/5e006c28777fae0e393b573d148432644a5d181b))
+* format all `api.md` files ([3d045e8](https://github.com/Blooio/blooio-python-sdk/commit/3d045e8d5b9cc2afca1d6c85ded4b0e531c28228))
+* **internal:** add request options to SSE classes ([3d004d8](https://github.com/Blooio/blooio-python-sdk/commit/3d004d8b3892f4f8a212ef00745919dc59a2e099))
+* **internal:** bump dependencies ([e6b7ec8](https://github.com/Blooio/blooio-python-sdk/commit/e6b7ec8b91ed416baf78c830519f226a4a361a98))
+* **internal:** codegen related update ([bdc07aa](https://github.com/Blooio/blooio-python-sdk/commit/bdc07aa8716f9de74bebb431a448dbf1f19a0837))
+* **internal:** fix lint error on Python 3.14 ([34988f7](https://github.com/Blooio/blooio-python-sdk/commit/34988f7b47fd8e01bbb8a0ba61abf52d66a9598a))
+* **internal:** make `test_proxy_environment_variables` more resilient ([fa78df3](https://github.com/Blooio/blooio-python-sdk/commit/fa78df3c42ab33e1f47de28ff366be72c2732134))
+* **internal:** make `test_proxy_environment_variables` more resilient to env ([a70f1e5](https://github.com/Blooio/blooio-python-sdk/commit/a70f1e597d63bd7c03f5262d29b32a16ca7eff4f))
+* **internal:** remove mock server code ([6d1b141](https://github.com/Blooio/blooio-python-sdk/commit/6d1b141349ac7e1eefe21ef50dc3b5d8de6707d6))
+* **internal:** update `actions/checkout` version ([3f2ef54](https://github.com/Blooio/blooio-python-sdk/commit/3f2ef546ebf7281cfca3d17255de0cdc288e1013))
+* update mock server docs ([b1c88e2](https://github.com/Blooio/blooio-python-sdk/commit/b1c88e2d8f1aac114dac3b288d540cae6f35d70c))
+* update SDK settings ([4a31da6](https://github.com/Blooio/blooio-python-sdk/commit/4a31da6cf0415becb34c3a5f83e6616a34d3f18f))
+* update SDK settings ([d02f331](https://github.com/Blooio/blooio-python-sdk/commit/d02f3312e2cd11a7e5492653d7950df76a4e6c36))
+
 ## 1.0.5 (2025-12-19)
 
 Full Changelog: [v1.0.4...v1.0.5](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.4...v1.0.5)

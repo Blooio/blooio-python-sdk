@@ -1,67 +1,76 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import List, Optional
+from typing_extensions import Literal
 
 from .._models import BaseModel
 
-__all__ = ["MeRetrieveResponse", "Device", "IntegrationDetails", "Usage"]
+__all__ = ["MeRetrieveResponse", "Device", "Organization", "Usage"]
 
 
 class Device(BaseModel):
-    device_hash: Optional[str] = None
-    """Hashed device identifier."""
-
     is_active: Optional[bool] = None
-    """Whether the device is currently active."""
 
     last_active: Optional[int] = None
-    """Unix timestamp (ms) of last device activity."""
+
+    phone_number: Optional[str] = None
+    """Phone number assigned to this device (E.164 format)"""
 
 
-class IntegrationDetails(BaseModel):
-    """Integration-specific details (GHL or API integration)."""
+class Organization(BaseModel):
+    country_code: Optional[str] = None
 
-    customer_webhook_url: Optional[str] = None
-    """Webhook URL for API integrations."""
-
-    metadata: Optional[object] = None
-    """Integration-specific metadata."""
+    created_at: Optional[int] = None
 
     name: Optional[str] = None
-    """Name of the integration (GHL only)."""
+
+    organization_id: Optional[str] = None
 
 
 class Usage(BaseModel):
-    """Usage statistics for this API key."""
+    """Usage statistics (only for api_key auth)"""
 
     inbound_messages: Optional[int] = None
-    """Total number of inbound messages."""
 
     last_message_sent: Optional[int] = None
-    """Unix timestamp (ms) of the last message sent."""
 
     outbound_messages: Optional[int] = None
-    """Total number of outbound messages."""
 
 
 class MeRetrieveResponse(BaseModel):
+    """Response depends on auth_type.
+
+    For 'api_key': includes full API key details. For 'dashboard': includes user_id and organization info only.
+    """
+
     api_key: Optional[str] = None
-    """The API key used for authentication."""
+    """The API key (only for api_key auth)"""
+
+    auth_type: Optional[Literal["api_key", "dashboard"]] = None
+    """Type of authentication used"""
 
     devices: Optional[List[Device]] = None
-    """List of devices associated with this API key."""
+    """List of devices associated with this API key (only for api_key auth)"""
 
-    integration_details: Optional[IntegrationDetails] = None
-    """Integration-specific details (GHL or API integration)."""
+    integration_details: Optional[object] = None
+    """
+    Integration details if the API key is associated with an integration (only for
+    api_key auth)
+    """
 
     metadata: Optional[object] = None
-    """Custom metadata associated with the API key."""
+    """API key metadata (only for api_key auth)"""
 
-    plan: Optional[str] = None
-    """The plan associated with this API key."""
+    organization: Optional[Organization] = None
+
+    organization_id: Optional[str] = None
+    """Organization ID (only for api_key auth)"""
 
     usage: Optional[Usage] = None
-    """Usage statistics for this API key."""
+    """Usage statistics (only for api_key auth)"""
+
+    user_id: Optional[str] = None
+    """User ID (only for dashboard auth)"""
 
     valid: Optional[bool] = None
-    """Whether the API key is valid."""
+    """Whether the API key is valid (only for api_key auth)"""

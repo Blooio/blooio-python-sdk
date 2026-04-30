@@ -11,7 +11,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
-The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [blooio.com](https://blooio.com). The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
@@ -33,7 +33,7 @@ client = Blooio(
 )
 
 me = client.me.retrieve()
-print(me.valid)
+print(me.organization_id)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -57,7 +57,7 @@ client = AsyncBlooio(
 
 async def main() -> None:
     me = await client.me.retrieve()
-    print(me.valid)
+    print(me.organization_id)
 
 
 asyncio.run(main())
@@ -91,7 +91,7 @@ async def main() -> None:
         http_client=DefaultAioHttpClient(),
     ) as client:
         me = await client.me.retrieve()
-        print(me.valid)
+        print(me.organization_id)
 
 
 asyncio.run(main())
@@ -105,6 +105,40 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 - Converting to a dictionary, `model.to_dict()`
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
+
+## Nested params
+
+Nested parameters are dictionaries, typed using `TypedDict`, for example:
+
+```python
+from blooio import Blooio
+
+client = Blooio()
+
+contact_card = client.me.numbers.contact_card.update(
+    number="number",
+    sharing={},
+)
+print(contact_card.sharing)
+```
+
+## File uploads
+
+Request parameters that correspond to file uploads can be passed as `bytes`, or a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance or a tuple of `(filename, contents, media type)`.
+
+```python
+from pathlib import Path
+from blooio import Blooio
+
+client = Blooio()
+
+client.groups.icon.set(
+    group_id="grp_abc123def456",
+    icon=Path("/path/to/file"),
+)
+```
+
+The async client uses the exact same interface. If you pass a [`PathLike`](https://docs.python.org/3/library/os.html#os.PathLike) instance, the file contents will be read asynchronously automatically.
 
 ## Handling errors
 
@@ -233,7 +267,7 @@ response = client.me.with_raw_response.retrieve()
 print(response.headers.get('X-My-Header'))
 
 me = response.parse()  # get the object that `me.retrieve()` would have returned
-print(me.valid)
+print(me.organization_id)
 ```
 
 These methods return an [`APIResponse`](https://github.com/Blooio/blooio-python-sdk/tree/main/src/blooio/_response.py) object.
