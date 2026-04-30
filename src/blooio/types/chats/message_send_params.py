@@ -9,7 +9,7 @@ from ..._types import SequenceNotStr
 from ..._utils import PropertyInfo
 from .link_preview_param import LinkPreviewParam
 
-__all__ = ["MessageSendParams", "Attachment", "AttachmentUnionMember1", "Part"]
+__all__ = ["MessageSendParams", "Attachment", "AttachmentUnionObjectVariant1", "Part"]
 
 
 class MessageSendParams(TypedDict, total=False):
@@ -64,13 +64,13 @@ class MessageSendParams(TypedDict, total=False):
     idempotency_key: Annotated[str, PropertyInfo(alias="Idempotency-Key")]
 
 
-class AttachmentUnionMember1(TypedDict, total=False):
+class AttachmentUnionObjectVariant1(TypedDict, total=False):
     url: Required[str]
 
     name: str
 
 
-Attachment: TypeAlias = Union[str, AttachmentUnionMember1]
+Attachment: TypeAlias = Union[str, AttachmentUnionObjectVariant1]
 
 
 class Part(TypedDict, total=False):
