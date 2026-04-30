@@ -427,6 +427,30 @@ class TestBlooio:
 
         client.close()
 
+    def test_hardcoded_query_params_in_url(self, client: Blooio) -> None:
+        request = client._build_request(FinalRequestOptions(method="get", url="/foo?beta=true"))
+        url = httpx.URL(request.url)
+        assert dict(url.params) == {"beta": "true"}
+
+        request = client._build_request(
+            FinalRequestOptions(
+                method="get",
+                url="/foo?beta=true",
+                params={"limit": "10", "page": "abc"},
+            )
+        )
+        url = httpx.URL(request.url)
+        assert dict(url.params) == {"beta": "true", "limit": "10", "page": "abc"}
+
+        request = client._build_request(
+            FinalRequestOptions(
+                method="get",
+                url="/files/a%2Fb?beta=true",
+                params={"limit": "10"},
+            )
+        )
+        assert request.url.raw_path == b"/files/a%2Fb?beta=true&limit=10"
+
     def test_request_extra_json(self, client: Blooio) -> None:
         request = client._build_request(
             FinalRequestOptions(
@@ -849,7 +873,7 @@ class TestBlooio:
     @mock.patch("blooio._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, client: Blooio) -> None:
-        respx_mock.get("/v1/api/me").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.get("/me").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
             client.me.with_streaming_response.retrieve().__enter__()
@@ -859,7 +883,7 @@ class TestBlooio:
     @mock.patch("blooio._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, client: Blooio) -> None:
-        respx_mock.get("/v1/api/me").mock(return_value=httpx.Response(500))
+        respx_mock.get("/me").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
             client.me.with_streaming_response.retrieve().__enter__()
@@ -889,7 +913,7 @@ class TestBlooio:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/v1/api/me").mock(side_effect=retry_handler)
+        respx_mock.get("/me").mock(side_effect=retry_handler)
 
         response = client.me.with_raw_response.retrieve()
 
@@ -913,7 +937,7 @@ class TestBlooio:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/v1/api/me").mock(side_effect=retry_handler)
+        respx_mock.get("/me").mock(side_effect=retry_handler)
 
         response = client.me.with_raw_response.retrieve(extra_headers={"x-stainless-retry-count": Omit()})
 
@@ -936,7 +960,7 @@ class TestBlooio:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/v1/api/me").mock(side_effect=retry_handler)
+        respx_mock.get("/me").mock(side_effect=retry_handler)
 
         response = client.me.with_raw_response.retrieve(extra_headers={"x-stainless-retry-count": "42"})
 
@@ -1317,6 +1341,30 @@ class TestAsyncBlooio:
         assert dict(url.params) == {"foo": "baz", "query_param": "overridden"}
 
         await client.close()
+
+    async def test_hardcoded_query_params_in_url(self, async_client: AsyncBlooio) -> None:
+        request = async_client._build_request(FinalRequestOptions(method="get", url="/foo?beta=true"))
+        url = httpx.URL(request.url)
+        assert dict(url.params) == {"beta": "true"}
+
+        request = async_client._build_request(
+            FinalRequestOptions(
+                method="get",
+                url="/foo?beta=true",
+                params={"limit": "10", "page": "abc"},
+            )
+        )
+        url = httpx.URL(request.url)
+        assert dict(url.params) == {"beta": "true", "limit": "10", "page": "abc"}
+
+        request = async_client._build_request(
+            FinalRequestOptions(
+                method="get",
+                url="/files/a%2Fb?beta=true",
+                params={"limit": "10"},
+            )
+        )
+        assert request.url.raw_path == b"/files/a%2Fb?beta=true&limit=10"
 
     def test_request_extra_json(self, client: Blooio) -> None:
         request = client._build_request(
@@ -1755,7 +1803,7 @@ class TestAsyncBlooio:
     @mock.patch("blooio._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_timeout_errors_doesnt_leak(self, respx_mock: MockRouter, async_client: AsyncBlooio) -> None:
-        respx_mock.get("/v1/api/me").mock(side_effect=httpx.TimeoutException("Test timeout error"))
+        respx_mock.get("/me").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
             await async_client.me.with_streaming_response.retrieve().__aenter__()
@@ -1765,7 +1813,7 @@ class TestAsyncBlooio:
     @mock.patch("blooio._base_client.BaseClient._calculate_retry_timeout", _low_retry_timeout)
     @pytest.mark.respx(base_url=base_url)
     async def test_retrying_status_errors_doesnt_leak(self, respx_mock: MockRouter, async_client: AsyncBlooio) -> None:
-        respx_mock.get("/v1/api/me").mock(return_value=httpx.Response(500))
+        respx_mock.get("/me").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
             await async_client.me.with_streaming_response.retrieve().__aenter__()
@@ -1795,7 +1843,7 @@ class TestAsyncBlooio:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/v1/api/me").mock(side_effect=retry_handler)
+        respx_mock.get("/me").mock(side_effect=retry_handler)
 
         response = await client.me.with_raw_response.retrieve()
 
@@ -1819,7 +1867,7 @@ class TestAsyncBlooio:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/v1/api/me").mock(side_effect=retry_handler)
+        respx_mock.get("/me").mock(side_effect=retry_handler)
 
         response = await client.me.with_raw_response.retrieve(extra_headers={"x-stainless-retry-count": Omit()})
 
@@ -1842,7 +1890,7 @@ class TestAsyncBlooio:
                 return httpx.Response(500)
             return httpx.Response(200)
 
-        respx_mock.get("/v1/api/me").mock(side_effect=retry_handler)
+        respx_mock.get("/me").mock(side_effect=retry_handler)
 
         response = await client.me.with_raw_response.retrieve(extra_headers={"x-stainless-retry-count": "42"})
 
