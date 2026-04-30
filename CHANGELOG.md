@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1 (2026-04-30)
+
+Full Changelog: [v1.1.0...v1.1.1](https://github.com/Blooio/blooio-python-sdk/compare/v1.1.0...v1.1.1)
+
+### Chores
+
+* update SDK settings ([c109c9a](https://github.com/Blooio/blooio-python-sdk/commit/c109c9a574fee0a646bacf698e0b2bc1d491c427))
+
 ## 1.1.0 (2026-04-30)
 
 Full Changelog: [v1.0.5...v1.1.0](https://github.com/Blooio/blooio-python-sdk/compare/v1.0.5...v1.1.0)
