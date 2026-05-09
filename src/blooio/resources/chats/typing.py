@@ -58,6 +58,10 @@ class TypingResource(SyncAPIResource):
         The indicator shows the recipient that
         you are typing.
 
+        **RCS limitation:** typing indicators are only delivered for iMessage chats —
+        the RCS protocol does not carry composing state. Calls against RCS-routed chats
+        return 200 with a `warning` field and have no visible effect on the recipient.
+
         Args:
           extra_headers: Send extra headers
 
@@ -90,6 +94,10 @@ class TypingResource(SyncAPIResource):
     ) -> TypingResponse:
         """
         Stop the typing indicator for a chat.
+
+        **RCS limitation:** typing indicators are only delivered for iMessage chats —
+        the RCS protocol does not carry composing state. Calls against RCS-routed chats
+        return 200 with a `warning` field and have no visible effect on the recipient.
 
         Args:
           extra_headers: Send extra headers
@@ -149,6 +157,10 @@ class AsyncTypingResource(AsyncAPIResource):
         The indicator shows the recipient that
         you are typing.
 
+        **RCS limitation:** typing indicators are only delivered for iMessage chats —
+        the RCS protocol does not carry composing state. Calls against RCS-routed chats
+        return 200 with a `warning` field and have no visible effect on the recipient.
+
         Args:
           extra_headers: Send extra headers
 
@@ -181,6 +193,10 @@ class AsyncTypingResource(AsyncAPIResource):
     ) -> TypingResponse:
         """
         Stop the typing indicator for a chat.
+
+        **RCS limitation:** typing indicators are only delivered for iMessage chats —
+        the RCS protocol does not carry composing state. Calls against RCS-routed chats
+        return 200 with a `warning` field and have no visible effect on the recipient.
 
         Args:
           extra_headers: Send extra headers
