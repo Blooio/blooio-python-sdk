@@ -257,6 +257,24 @@ class MessagesResource(SyncAPIResource):
         chat_id: str,
         *,
         attachments: SequenceNotStr[message_send_params.Attachment] | Omit = omit,
+        effect: Optional[
+            Literal[
+                "slam",
+                "loud",
+                "gentle",
+                "invisible-ink",
+                "echo",
+                "spotlight",
+                "balloons",
+                "confetti",
+                "love",
+                "lasers",
+                "fireworks",
+                "celebration",
+                "none",
+            ]
+        ]
+        | Omit = omit,
         from_number: str | Omit = omit,
         link_preview: Optional[LinkPreviewParam] | Omit = omit,
         parts: Iterable[message_send_params.Part] | Omit = omit,
@@ -279,8 +297,48 @@ class MessagesResource(SyncAPIResource):
         created or reused if the exact participant combination already exists. For
         explicit groups, the group must be linked to an existing iMessage chat.
 
+        **iMessage send-with-effect:** set the optional `effect` field to attach an
+        Apple expressive send (slam, loud, gentle, invisible-ink) or screen effect
+        (echo, spotlight, balloons, confetti, love, lasers, fireworks, celebration).
+        Effects are an iMessage-only feature — when the recipient is on SMS/RCS the
+        message is delivered without the animation. Effects are not supported in
+        multipart (`parts`) mode.
+
         Args:
           attachments: Array of attachment URLs or objects with url/name
+
+          effect: Optional. Attach an iMessage send-with-effect to the outgoing message.
+
+              **Bubble effects** (apply to a single text bubble):
+
+              - `slam` — Slam
+              - `loud` — Loud
+              - `gentle` — Gentle
+              - `invisible-ink` — Invisible Ink
+
+              **Screen effects** (full-screen animation in the recipient's chat):
+
+              - `echo` — Echo
+              - `spotlight` — Spotlight
+              - `balloons` — Balloons
+              - `confetti` — Confetti
+              - `love` — Love (heart)
+              - `lasers` — Lasers
+              - `fireworks` — Fireworks
+              - `celebration` — Celebration (sparkles)
+
+              Values are case-insensitive and accept either dashes or spaces
+              (`"Invisible Ink"` and `"invisible-ink"` both work). Pass `"none"` or omit the
+              field to send without an effect.
+
+              **Limitations:**
+
+              - iMessage-only — when the chat is delivered as SMS or RCS the message is sent
+                without an animation.
+              - Not supported alongside the `parts` array (multipart bubbles cannot carry an
+                effect). Use the top-level `text` field instead.
+              - When `text` is an array, every message in the array is sent with the same
+                effect.
 
           from_number: E.164 phone number to send from. For Twilio API keys, this is optional — if
               omitted, the first assigned Twilio number is auto-selected. For Blooio
@@ -329,6 +387,7 @@ class MessagesResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "attachments": attachments,
+                    "effect": effect,
                     "from_number": from_number,
                     "link_preview": link_preview,
                     "parts": parts,
@@ -573,6 +632,24 @@ class AsyncMessagesResource(AsyncAPIResource):
         chat_id: str,
         *,
         attachments: SequenceNotStr[message_send_params.Attachment] | Omit = omit,
+        effect: Optional[
+            Literal[
+                "slam",
+                "loud",
+                "gentle",
+                "invisible-ink",
+                "echo",
+                "spotlight",
+                "balloons",
+                "confetti",
+                "love",
+                "lasers",
+                "fireworks",
+                "celebration",
+                "none",
+            ]
+        ]
+        | Omit = omit,
         from_number: str | Omit = omit,
         link_preview: Optional[LinkPreviewParam] | Omit = omit,
         parts: Iterable[message_send_params.Part] | Omit = omit,
@@ -595,8 +672,48 @@ class AsyncMessagesResource(AsyncAPIResource):
         created or reused if the exact participant combination already exists. For
         explicit groups, the group must be linked to an existing iMessage chat.
 
+        **iMessage send-with-effect:** set the optional `effect` field to attach an
+        Apple expressive send (slam, loud, gentle, invisible-ink) or screen effect
+        (echo, spotlight, balloons, confetti, love, lasers, fireworks, celebration).
+        Effects are an iMessage-only feature — when the recipient is on SMS/RCS the
+        message is delivered without the animation. Effects are not supported in
+        multipart (`parts`) mode.
+
         Args:
           attachments: Array of attachment URLs or objects with url/name
+
+          effect: Optional. Attach an iMessage send-with-effect to the outgoing message.
+
+              **Bubble effects** (apply to a single text bubble):
+
+              - `slam` — Slam
+              - `loud` — Loud
+              - `gentle` — Gentle
+              - `invisible-ink` — Invisible Ink
+
+              **Screen effects** (full-screen animation in the recipient's chat):
+
+              - `echo` — Echo
+              - `spotlight` — Spotlight
+              - `balloons` — Balloons
+              - `confetti` — Confetti
+              - `love` — Love (heart)
+              - `lasers` — Lasers
+              - `fireworks` — Fireworks
+              - `celebration` — Celebration (sparkles)
+
+              Values are case-insensitive and accept either dashes or spaces
+              (`"Invisible Ink"` and `"invisible-ink"` both work). Pass `"none"` or omit the
+              field to send without an effect.
+
+              **Limitations:**
+
+              - iMessage-only — when the chat is delivered as SMS or RCS the message is sent
+                without an animation.
+              - Not supported alongside the `parts` array (multipart bubbles cannot carry an
+                effect). Use the top-level `text` field instead.
+              - When `text` is an array, every message in the array is sent with the same
+                effect.
 
           from_number: E.164 phone number to send from. For Twilio API keys, this is optional — if
               omitted, the first assigned Twilio number is auto-selected. For Blooio
@@ -645,6 +762,7 @@ class AsyncMessagesResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "attachments": attachments,
+                    "effect": effect,
                     "from_number": from_number,
                     "link_preview": link_preview,
                     "parts": parts,

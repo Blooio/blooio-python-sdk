@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Union, Iterable, Optional
-from typing_extensions import Required, Annotated, TypeAlias, TypedDict
+from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
 
 from ..._types import SequenceNotStr
 from ..._utils import PropertyInfo
@@ -15,6 +15,57 @@ __all__ = ["MessageSendParams", "Attachment", "AttachmentUnionObjectVariant1", "
 class MessageSendParams(TypedDict, total=False):
     attachments: SequenceNotStr[Attachment]
     """Array of attachment URLs or objects with url/name"""
+
+    effect: Optional[
+        Literal[
+            "slam",
+            "loud",
+            "gentle",
+            "invisible-ink",
+            "echo",
+            "spotlight",
+            "balloons",
+            "confetti",
+            "love",
+            "lasers",
+            "fireworks",
+            "celebration",
+            "none",
+        ]
+    ]
+    """Optional. Attach an iMessage send-with-effect to the outgoing message.
+
+    **Bubble effects** (apply to a single text bubble):
+
+    - `slam` — Slam
+    - `loud` — Loud
+    - `gentle` — Gentle
+    - `invisible-ink` — Invisible Ink
+
+    **Screen effects** (full-screen animation in the recipient's chat):
+
+    - `echo` — Echo
+    - `spotlight` — Spotlight
+    - `balloons` — Balloons
+    - `confetti` — Confetti
+    - `love` — Love (heart)
+    - `lasers` — Lasers
+    - `fireworks` — Fireworks
+    - `celebration` — Celebration (sparkles)
+
+    Values are case-insensitive and accept either dashes or spaces
+    (`"Invisible Ink"` and `"invisible-ink"` both work). Pass `"none"` or omit the
+    field to send without an effect.
+
+    **Limitations:**
+
+    - iMessage-only — when the chat is delivered as SMS or RCS the message is sent
+      without an animation.
+    - Not supported alongside the `parts` array (multipart bubbles cannot carry an
+      effect). Use the top-level `text` field instead.
+    - When `text` is an array, every message in the array is sent with the same
+      effect.
+    """
 
     from_number: str
     """E.164 phone number to send from.
