@@ -265,6 +265,7 @@ class TestMessages:
         message = client.chats.messages.send(
             chat_id="chatId",
             attachments=["string"],
+            effect="slam",
             from_number="from_number",
             link_preview={
                 "image_url": "https://example.com",
@@ -571,6 +572,7 @@ class TestAsyncMessages:
         message = await async_client.chats.messages.send(
             chat_id="chatId",
             attachments=["string"],
+            effect="slam",
             from_number="from_number",
             link_preview={
                 "image_url": "https://example.com",
