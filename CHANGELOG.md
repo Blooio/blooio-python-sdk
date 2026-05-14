@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.2.0 (2026-05-14)
+
+Full Changelog: [v1.1.1...v1.2.0](https://github.com/Blooio/blooio-python-sdk/compare/v1.1.1...v1.2.0)
+
+### Features
+
+* **api:** api update ([5c4426c](https://github.com/Blooio/blooio-python-sdk/commit/5c4426ca2a3cc9b946114a760736b3065fa32f12))
+* **api:** api update ([792b695](https://github.com/Blooio/blooio-python-sdk/commit/792b695493cc225da6a6e4b66c828e1a070e736b))
+* **api:** api update ([7ab7fb6](https://github.com/Blooio/blooio-python-sdk/commit/7ab7fb636a69da2d1dcd67dca110ff627d380723))
+* **api:** manual updates ([20785b1](https://github.com/Blooio/blooio-python-sdk/commit/20785b127663e4972d2b2910ec9ee86e68c1829c))
+* **internal/types:** support eagerly validating pydantic iterators ([09e6772](https://github.com/Blooio/blooio-python-sdk/commit/09e67720ecd10fdddada3bbd59fcd06546c3c29f))
+
+
+### Bug Fixes
+
+* **client:** add missing f-string prefix in file type error message ([6126d3d](https://github.com/Blooio/blooio-python-sdk/commit/6126d3d6cbf2f395a465df8dac3edda83933248a))
+
+
+### Chores
+
+* **internal:** reformat pyproject.toml ([07380c6](https://github.com/Blooio/blooio-python-sdk/commit/07380c6a86dda7dbb1d633a4bb3e032e9b869102))
+
 ## 1.1.1 (2026-04-30)
 
 Full Changelog: [v1.1.0...v1.1.1](https://github.com/Blooio/blooio-python-sdk/compare/v1.1.0...v1.1.1)
