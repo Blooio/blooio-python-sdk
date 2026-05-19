@@ -19,3 +19,10 @@ class TypingResponse(BaseModel):
 
     typing: Optional[bool] = None
     """Whether typing indicator is active"""
+
+    warning: Optional[str] = None
+    """Present when the request was accepted but the indicator could not be delivered.
+
+    The most common reason is that the chat last routed via RCS, which does not
+    carry composing state.
+    """

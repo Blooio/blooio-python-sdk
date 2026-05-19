@@ -16,6 +16,12 @@ class Device(BaseModel):
     phone_number: Optional[str] = None
     """Phone number assigned to this device (E.164 format)"""
 
+    plan_kind: Optional[Literal["shared", "dedicated", "inbound", "trial", "2fa"]] = None
+    """Plan type the underlying allocation runs on.
+
+    `inbound` numbers are reply-only — see `/me/numbers` for details.
+    """
+
 
 class Organization(BaseModel):
     country_code: Optional[str] = None
