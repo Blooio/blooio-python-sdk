@@ -278,6 +278,7 @@ class MessagesResource(SyncAPIResource):
         from_number: str | Omit = omit,
         link_preview: Optional[LinkPreviewParam] | Omit = omit,
         parts: Iterable[message_send_params.Part] | Omit = omit,
+        reply_to: Optional[message_send_params.ReplyTo] | Omit = omit,
         share_contact: bool | Omit = omit,
         text: Union[str, SequenceNotStr[str]] | Omit = omit,
         use_typing_indicator: bool | Omit = omit,
@@ -303,6 +304,20 @@ class MessagesResource(SyncAPIResource):
         Effects are an iMessage-only feature — when the recipient is on SMS/RCS the
         message is delivered without the animation. Effects are not supported in
         multipart (`parts`) mode.
+
+        **Threaded replies (iMessage inline reply):** set the optional `reply_to` field
+        to send the outgoing message as a reply to a specific earlier message. Two
+        shapes are accepted: `{ "message_id": "msg_…" }` references a Blooio-minted
+        message in the same chat (most common — the message*id returned by an earlier
+        send or surfaced on a `message.received` webhook), or
+        `{ "guid": "…", "part_index": 0 }` references the raw iMessage GUID for the rare
+        case where the parent wasn't recorded by Blooio. The reply must target the same
+        chat and the same from-number as the new send, and the parent must be no older
+        than 30 days (the iMessage on-device retention horizon). Reply support is
+        iMessage-only and is rejected on Twilio, dashboard-Twilio, and hybrid send
+        paths; it's also rejected on multi-message fan-outs (`text` array or per-part
+        URL-balloon batch). See the `400` responses for the full set of
+        `reply_target*\\**` error codes.
 
         Args:
           attachments: Array of attachment URLs or objects with url/name
@@ -363,6 +378,13 @@ class MessagesResource(SyncAPIResource):
                  `text` being a single http(s) URL. Response contains `message_ids[]` +
                  `count` instead of `message_id`.
 
+          reply_to: Inline-reply target on `POST /chats/{chatId}/messages`. Pass either `message_id`
+              (preferred — references a Blooio-minted message) or `guid` (raw iMessage GUID,
+              useful for replying to messages received before the row was minted in Blooio).
+              The new send is dispatched to Lava with the resolved `selectedMessageGuid` +
+              `partIndex`, which iMessage renders as an inline reply on the recipient's
+              device.
+
           share_contact: If true, the contact card (Name & Photo) will be shared with this message. The
               contact card is piggybacked onto the outgoing message. Defaults to false.
 
@@ -391,6 +413,7 @@ class MessagesResource(SyncAPIResource):
                     "from_number": from_number,
                     "link_preview": link_preview,
                     "parts": parts,
+                    "reply_to": reply_to,
                     "share_contact": share_contact,
                     "text": text,
                     "use_typing_indicator": use_typing_indicator,
@@ -653,6 +676,7 @@ class AsyncMessagesResource(AsyncAPIResource):
         from_number: str | Omit = omit,
         link_preview: Optional[LinkPreviewParam] | Omit = omit,
         parts: Iterable[message_send_params.Part] | Omit = omit,
+        reply_to: Optional[message_send_params.ReplyTo] | Omit = omit,
         share_contact: bool | Omit = omit,
         text: Union[str, SequenceNotStr[str]] | Omit = omit,
         use_typing_indicator: bool | Omit = omit,
@@ -678,6 +702,20 @@ class AsyncMessagesResource(AsyncAPIResource):
         Effects are an iMessage-only feature — when the recipient is on SMS/RCS the
         message is delivered without the animation. Effects are not supported in
         multipart (`parts`) mode.
+
+        **Threaded replies (iMessage inline reply):** set the optional `reply_to` field
+        to send the outgoing message as a reply to a specific earlier message. Two
+        shapes are accepted: `{ "message_id": "msg_…" }` references a Blooio-minted
+        message in the same chat (most common — the message*id returned by an earlier
+        send or surfaced on a `message.received` webhook), or
+        `{ "guid": "…", "part_index": 0 }` references the raw iMessage GUID for the rare
+        case where the parent wasn't recorded by Blooio. The reply must target the same
+        chat and the same from-number as the new send, and the parent must be no older
+        than 30 days (the iMessage on-device retention horizon). Reply support is
+        iMessage-only and is rejected on Twilio, dashboard-Twilio, and hybrid send
+        paths; it's also rejected on multi-message fan-outs (`text` array or per-part
+        URL-balloon batch). See the `400` responses for the full set of
+        `reply_target*\\**` error codes.
 
         Args:
           attachments: Array of attachment URLs or objects with url/name
@@ -738,6 +776,13 @@ class AsyncMessagesResource(AsyncAPIResource):
                  `text` being a single http(s) URL. Response contains `message_ids[]` +
                  `count` instead of `message_id`.
 
+          reply_to: Inline-reply target on `POST /chats/{chatId}/messages`. Pass either `message_id`
+              (preferred — references a Blooio-minted message) or `guid` (raw iMessage GUID,
+              useful for replying to messages received before the row was minted in Blooio).
+              The new send is dispatched to Lava with the resolved `selectedMessageGuid` +
+              `partIndex`, which iMessage renders as an inline reply on the recipient's
+              device.
+
           share_contact: If true, the contact card (Name & Photo) will be shared with this message. The
               contact card is piggybacked onto the outgoing message. Defaults to false.
 
@@ -766,6 +811,7 @@ class AsyncMessagesResource(AsyncAPIResource):
                     "from_number": from_number,
                     "link_preview": link_preview,
                     "parts": parts,
+                    "reply_to": reply_to,
                     "share_contact": share_contact,
                     "text": text,
                     "use_typing_indicator": use_typing_indicator,
