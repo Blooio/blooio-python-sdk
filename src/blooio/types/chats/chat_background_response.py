@@ -13,14 +13,6 @@ class ChatBackgroundResponse(BaseModel):
     background_id: Optional[str] = None
     """Unique identifier for the current background, or null if none"""
 
-    background_url: Optional[str] = None
-    """Public URL of the persisted background image stored in R2.
-
-    Returned after a successful PUT and on GET when a background has been set
-    through the API. May be null if persistence failed or the background was set
-    outside of the API.
-    """
-
     background_version: Optional[int] = None
     """Version number of the background (for cache invalidation)"""
 

@@ -78,7 +78,7 @@ class ChatsResource(SyncAPIResource):
 
     @cached_property
     def background(self) -> BackgroundResource:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return BackgroundResource(self._client)
 
     @cached_property
@@ -279,7 +279,7 @@ class AsyncChatsResource(AsyncAPIResource):
 
     @cached_property
     def background(self) -> AsyncBackgroundResource:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return AsyncBackgroundResource(self._client)
 
     @cached_property
@@ -496,7 +496,7 @@ class ChatsResourceWithRawResponse:
 
     @cached_property
     def background(self) -> BackgroundResourceWithRawResponse:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return BackgroundResourceWithRawResponse(self._chats.background)
 
 
@@ -536,7 +536,7 @@ class AsyncChatsResourceWithRawResponse:
 
     @cached_property
     def background(self) -> AsyncBackgroundResourceWithRawResponse:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return AsyncBackgroundResourceWithRawResponse(self._chats.background)
 
 
@@ -576,7 +576,7 @@ class ChatsResourceWithStreamingResponse:
 
     @cached_property
     def background(self) -> BackgroundResourceWithStreamingResponse:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return BackgroundResourceWithStreamingResponse(self._chats.background)
 
 
@@ -616,5 +616,5 @@ class AsyncChatsResourceWithStreamingResponse:
 
     @cached_property
     def background(self) -> AsyncBackgroundResourceWithStreamingResponse:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return AsyncBackgroundResourceWithStreamingResponse(self._chats.background)

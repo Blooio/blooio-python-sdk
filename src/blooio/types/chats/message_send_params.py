@@ -9,7 +9,7 @@ from ..._types import SequenceNotStr
 from ..._utils import PropertyInfo
 from .link_preview_param import LinkPreviewParam
 
-__all__ = ["MessageSendParams", "Attachment", "AttachmentUnionObjectVariant1", "Part", "ReplyTo"]
+__all__ = ["MessageSendParams", "Attachment", "AttachmentUnionObjectVariant1", "Part"]
 
 
 class MessageSendParams(TypedDict, total=False):
@@ -97,16 +97,6 @@ class MessageSendParams(TypedDict, total=False):
        `count` instead of `message_id`.
     """
 
-    reply_to: Optional[ReplyTo]
-    """Inline-reply target on `POST /chats/{chatId}/messages`.
-
-    Pass either `message_id` (preferred — references a Blooio-minted message) or
-    `guid` (raw iMessage GUID, useful for replying to messages received before the
-    row was minted in Blooio). The new send is dispatched to Lava with the resolved
-    `selectedMessageGuid` + `partIndex`, which iMessage renders as an inline reply
-    on the recipient's device.
-    """
-
     share_contact: bool
     """If true, the contact card (Name & Photo) will be shared with this message.
 
@@ -159,32 +149,3 @@ class Part(TypedDict, total=False):
 
     url: str
     """URL to an attachment for this part. Mutually exclusive with 'text'."""
-
-
-class ReplyTo(TypedDict, total=False):
-    """Inline-reply target on `POST /chats/{chatId}/messages`.
-
-    Pass either `message_id` (preferred — references a Blooio-minted message) or `guid` (raw iMessage GUID, useful for replying to messages received before the row was minted in Blooio). The new send is dispatched to Lava with the resolved `selectedMessageGuid` + `partIndex`, which iMessage renders as an inline reply on the recipient's device.
-    """
-
-    guid: str
-    """Raw iMessage GUID of the parent.
-
-    When supplied without a `message_id`, Blooio attempts to look up the parent via
-    `provider_message_guid`; if the parent isn't in our table the send still
-    proceeds (Lava will thread on the device when possible) and the response carries
-    `parent_unresolved: true`.
-    """
-
-    message_id: str
-    """Blooio `message_id` of the parent.
-
-    Must belong to the same chat, same from-number, and be no older than 30 days.
-    Returns 404 `reply_target_not_found` if unknown.
-    """
-
-    part_index: int
-    """Which part of the parent to reply to.
-
-    Defaults to 0 (covers the 99% case of replying to a single-part text message).
-    """
