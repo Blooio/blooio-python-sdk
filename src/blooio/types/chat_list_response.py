@@ -24,12 +24,6 @@ class Chat(BaseModel):
     id: Optional[str] = None
     """Chat identifier (phone number, email, or group ID)"""
 
-    background_id: Optional[str] = None
-    """Identifier for the active chat background"""
-
-    background_url: Optional[str] = None
-    """Public URL of the chat background image (if one has been set via the API)"""
-
     contact: Optional[ChatContact] = None
     """Contact info (only for non-group chats)"""
 
