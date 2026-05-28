@@ -22,7 +22,7 @@ class MessageReactParams(TypedDict, total=False):
     `-question`
 
     **Emoji reactions:** Any emoji prefixed with `+` or `-` (e.g. `+😂`, `-😂`,
-    `+👍`, `-🔥`). Emoji reactions require macOS 14 (Sonoma) or later on the device.
+    `+👍`, `-🔥`).
     """
 
     direction: Literal["inbound", "outbound"]
