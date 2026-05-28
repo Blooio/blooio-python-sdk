@@ -209,8 +209,6 @@ class MessagesResource(SyncAPIResource):
         (-1 for last message, -2 for second-to-last, etc.). When using relative indices,
         you can optionally filter by message direction (inbound/outbound only).
 
-        Emoji reactions require macOS 14 (Sonoma) or later on the device.
-
         Args:
           reaction: The reaction to add or remove. Must be prefixed with `+` to add or `-` to
               remove.
@@ -220,7 +218,7 @@ class MessagesResource(SyncAPIResource):
               `-question`
 
               **Emoji reactions:** Any emoji prefixed with `+` or `-` (e.g. `+😂`, `-😂`,
-              `+👍`, `-🔥`). Emoji reactions require macOS 14 (Sonoma) or later on the device.
+              `+👍`, `-🔥`).
 
           direction: Filter by message direction (only used when messageId is a relative index like
               -1, -2)
@@ -584,8 +582,6 @@ class AsyncMessagesResource(AsyncAPIResource):
         (-1 for last message, -2 for second-to-last, etc.). When using relative indices,
         you can optionally filter by message direction (inbound/outbound only).
 
-        Emoji reactions require macOS 14 (Sonoma) or later on the device.
-
         Args:
           reaction: The reaction to add or remove. Must be prefixed with `+` to add or `-` to
               remove.
@@ -595,7 +591,7 @@ class AsyncMessagesResource(AsyncAPIResource):
               `-question`
 
               **Emoji reactions:** Any emoji prefixed with `+` or `-` (e.g. `+😂`, `-😂`,
-              `+👍`, `-🔥`). Emoji reactions require macOS 14 (Sonoma) or later on the device.
+              `+👍`, `-🔥`).
 
           direction: Filter by message direction (only used when messageId is a relative index like
               -1, -2)
