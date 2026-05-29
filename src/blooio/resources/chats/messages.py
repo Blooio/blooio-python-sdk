@@ -362,7 +362,9 @@ class MessagesResource(SyncAPIResource):
                  `count` instead of `message_id`.
 
           share_contact: If true, the contact card (Name & Photo) will be shared with this message. The
-              contact card is piggybacked onto the outgoing message. Defaults to false.
+              contact card is piggybacked onto the outgoing message. Defaults to false. ⚠️
+              Only available on **Dedicated Commercial** and **Dedicated Enterprise** plans —
+              other plans receive a `403`.
 
           text: Message text. Can be a single string or array of strings (each becomes a
               separate message)
@@ -735,7 +737,9 @@ class AsyncMessagesResource(AsyncAPIResource):
                  `count` instead of `message_id`.
 
           share_contact: If true, the contact card (Name & Photo) will be shared with this message. The
-              contact card is piggybacked onto the outgoing message. Defaults to false.
+              contact card is piggybacked onto the outgoing message. Defaults to false. ⚠️
+              Only available on **Dedicated Commercial** and **Dedicated Enterprise** plans —
+              other plans receive a `403`.
 
           text: Message text. Can be a single string or array of strings (each becomes a
               separate message)
