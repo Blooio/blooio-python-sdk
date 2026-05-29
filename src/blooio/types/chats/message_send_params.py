@@ -100,7 +100,9 @@ class MessageSendParams(TypedDict, total=False):
     share_contact: bool
     """If true, the contact card (Name & Photo) will be shared with this message.
 
-    The contact card is piggybacked onto the outgoing message. Defaults to false.
+    The contact card is piggybacked onto the outgoing message. Defaults to false. ⚠️
+    Only available on **Dedicated Commercial** and **Dedicated Enterprise** plans —
+    other plans receive a `403`.
     """
 
     text: Union[str, SequenceNotStr[str]]
