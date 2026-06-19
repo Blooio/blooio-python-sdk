@@ -9,7 +9,11 @@ __all__ = ["LogListParams"]
 
 class LogListParams(TypedDict, total=False):
     limit: int
-    """Maximum number of items to return (1-200)"""
+    """Maximum number of items to return in a single response.
+
+    Must be between 1 and 200; defaults to 50. Use together with `offset` to page
+    through large result sets.
+    """
 
     max_status: int
     """Maximum HTTP status code"""
@@ -18,7 +22,11 @@ class LogListParams(TypedDict, total=False):
     """Minimum HTTP status code"""
 
     offset: int
-    """Number of items to skip"""
+    """Number of items to skip before returning results.
+
+    Combine with `limit` for page-based pagination (e.g. `offset=50&limit=50`
+    returns the second page). Defaults to 0.
+    """
 
     sort: Literal["asc", "desc"]
     """Sort order by attempted time"""
