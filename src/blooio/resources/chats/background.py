@@ -140,7 +140,7 @@ class BackgroundResource(SyncAPIResource):
         from disk:
 
         ```bash
-        curl -X PUT "https://backend.blooio.com/v2/api/chats/%2B15551234567/background" \\
+        curl -X PUT "https://api.blooio.com/v2/api/chats/%2B15551234567/background" \\
           -H "Authorization: Bearer YOUR_API_KEY" \\
           -F "background=@/path/to/image.jpg;type=image/jpeg"
         ```
@@ -297,7 +297,7 @@ class AsyncBackgroundResource(AsyncAPIResource):
         from disk:
 
         ```bash
-        curl -X PUT "https://backend.blooio.com/v2/api/chats/%2B15551234567/background" \\
+        curl -X PUT "https://api.blooio.com/v2/api/chats/%2B15551234567/background" \\
           -H "Authorization: Bearer YOUR_API_KEY" \\
           -F "background=@/path/to/image.jpg;type=image/jpeg"
         ```
