@@ -42,4 +42,9 @@ class MessageSendResponse(BaseModel):
     """List of participants (present for multi-recipient)"""
 
     status: Optional[Literal["queued", "failed"]] = None
-    """Initial status of the message(s)"""
+    """Initial status of the message(s).
+
+    `queued` = accepted for delivery (the normal 202 result); `failed` = rejected
+    before dispatch. Subsequent transitions (`sent` → `delivered`, or `failed`) are
+    reported via the status endpoint and `message.status` webhooks.
+    """

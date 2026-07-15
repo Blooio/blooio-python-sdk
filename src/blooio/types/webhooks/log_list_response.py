@@ -75,8 +75,15 @@ class LogEventBody(BaseModel):
     participants: Optional[List[LogEventBodyParticipant]] = None
     """Array of group participants (only present when is_group=true)"""
 
-    protocol: Optional[Literal["imessage", "sms", "rcs", "non-imessage"]] = None
-    """Message protocol"""
+    protocol: Optional[Literal["pending", "unknown", "imessage", "sms", "rcs"]] = None
+    """Transport used to carry the message; never null.
+
+    `pending` = accepted and dispatched, wire service not resolved yet (settles
+    within seconds of send); `imessage` = delivered over iMessage (blue bubble);
+    `rcs` = delivered over RCS; `sms` = fell back to SMS/MMS (green bubble);
+    `unknown` = accepted by the carrier but the wire service could not be resolved
+    before the tracking window closed (see `error`).
+    """
 
     read_at: Optional[int] = None
     """Timestamp when message was read (for message.read events)"""
@@ -88,7 +95,14 @@ class LogEventBody(BaseModel):
     """Timestamp when message was sent (for message.sent events)"""
 
     status: Optional[Literal["queued", "pending", "sent", "delivered", "failed", "read", "received"]] = None
-    """Message status"""
+    """Message status carried by the event.
+
+    `queued` / `pending` = accepted, not yet handed off; `sent` = handed to
+    Apple/the carrier; `delivered` = a delivery receipt was received; `read` = a
+    read receipt was received (iMessage, when the recipient has read receipts on);
+    `failed` = delivery failed (see `error_code` / `error_message`); `received` = an
+    inbound message arrived.
+    """
 
     text: Optional[str] = None
     """Message text content"""
