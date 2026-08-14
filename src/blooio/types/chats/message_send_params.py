@@ -14,7 +14,14 @@ __all__ = ["MessageSendParams", "Attachment", "AttachmentUnionObjectVariant1", "
 
 class MessageSendParams(TypedDict, total=False):
     attachments: SequenceNotStr[Attachment]
-    """Array of attachment URLs or objects with url/name"""
+    """Array of attachment URLs or objects with url/name.
+
+    **Voice memos:** a single audio file (`.mp3`, `.m4a`, `.wav`, `.aac`, `.opus`,
+    `.ogg`) is automatically sent as a voice memo (the native waveform/scrubber
+    bubble), not a plain audio-file attachment — no extra field is needed. A voice
+    memo is a standalone bubble, so it cannot be combined with `text` or any other
+    attachment; send the voice memo and the text as two separate messages.
+    """
 
     effect: Optional[
         Literal[
