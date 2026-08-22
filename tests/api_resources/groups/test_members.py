@@ -9,7 +9,11 @@ import pytest
 
 from blooio import Blooio, AsyncBlooio
 from tests.utils import assert_matches_type
-from blooio.types.groups import MemberListResponse
+from blooio.types.groups import (
+    MemberAddResponse,
+    MemberListResponse,
+    MemberRemoveResponse,
+)
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -76,7 +80,7 @@ class TestMembers:
             group_id="grp_abc123def456",
             contact_id="+15551234567",
         )
-        assert member is None
+        assert_matches_type(MemberAddResponse, member, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -89,7 +93,7 @@ class TestMembers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         member = response.parse()
-        assert member is None
+        assert_matches_type(MemberAddResponse, member, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -102,7 +106,7 @@ class TestMembers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             member = response.parse()
-            assert member is None
+            assert_matches_type(MemberAddResponse, member, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -122,7 +126,7 @@ class TestMembers:
             contact_id="%2B15551234567",
             group_id="grp_abc123def456",
         )
-        assert member is None
+        assert_matches_type(MemberRemoveResponse, member, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -135,7 +139,7 @@ class TestMembers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         member = response.parse()
-        assert member is None
+        assert_matches_type(MemberRemoveResponse, member, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -148,7 +152,7 @@ class TestMembers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             member = response.parse()
-            assert member is None
+            assert_matches_type(MemberRemoveResponse, member, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -232,7 +236,7 @@ class TestAsyncMembers:
             group_id="grp_abc123def456",
             contact_id="+15551234567",
         )
-        assert member is None
+        assert_matches_type(MemberAddResponse, member, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -245,7 +249,7 @@ class TestAsyncMembers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         member = await response.parse()
-        assert member is None
+        assert_matches_type(MemberAddResponse, member, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -258,7 +262,7 @@ class TestAsyncMembers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             member = await response.parse()
-            assert member is None
+            assert_matches_type(MemberAddResponse, member, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -278,7 +282,7 @@ class TestAsyncMembers:
             contact_id="%2B15551234567",
             group_id="grp_abc123def456",
         )
-        assert member is None
+        assert_matches_type(MemberRemoveResponse, member, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -291,7 +295,7 @@ class TestAsyncMembers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         member = await response.parse()
-        assert member is None
+        assert_matches_type(MemberRemoveResponse, member, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -304,7 +308,7 @@ class TestAsyncMembers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             member = await response.parse()
-            assert member is None
+            assert_matches_type(MemberRemoveResponse, member, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

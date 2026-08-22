@@ -5,7 +5,7 @@ from __future__ import annotations
 import httpx
 
 from ..types import facetime_initiate_call_params
-from .._types import Body, Query, Headers, NoneType, NotGiven, not_given
+from .._types import Body, Query, Headers, NotGiven, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -16,6 +16,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
+from ..types.facetime_initiate_call_response import FacetimeInitiateCallResponse
 
 __all__ = ["FacetimeResource", "AsyncFacetimeResource"]
 
@@ -52,7 +53,7 @@ class FacetimeResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
+    ) -> FacetimeInitiateCallResponse:
         """
         **Coming Soon** -- This endpoint is temporarily disabled while we stabilize the
         FaceTime call flow.
@@ -72,14 +73,13 @@ class FacetimeResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._post(
             "/facetime/calls",
             body=maybe_transform({"handle": handle}, facetime_initiate_call_params.FacetimeInitiateCallParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
+            cast_to=FacetimeInitiateCallResponse,
         )
 
 
@@ -115,7 +115,7 @@ class AsyncFacetimeResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
+    ) -> FacetimeInitiateCallResponse:
         """
         **Coming Soon** -- This endpoint is temporarily disabled while we stabilize the
         FaceTime call flow.
@@ -135,7 +135,6 @@ class AsyncFacetimeResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._post(
             "/facetime/calls",
             body=await async_maybe_transform(
@@ -144,7 +143,7 @@ class AsyncFacetimeResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
+            cast_to=FacetimeInitiateCallResponse,
         )
 
 
