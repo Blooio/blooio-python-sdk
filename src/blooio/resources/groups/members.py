@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import httpx
 
-from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
 from ..._utils import path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
@@ -16,9 +16,7 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.groups import member_add_params, member_list_params
-from ...types.groups.member_add_response import MemberAddResponse
 from ...types.groups.member_list_response import MemberListResponse
-from ...types.groups.member_remove_response import MemberRemoveResponse
 
 __all__ = ["MembersResource", "AsyncMembersResource"]
 
@@ -109,7 +107,7 @@ class MembersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MemberAddResponse:
+    ) -> None:
         """
         ⚠️ **COMING SOON** - This endpoint is temporarily disabled while we stabilize
         this feature.
@@ -130,13 +128,14 @@ class MembersResource(SyncAPIResource):
         """
         if not group_id:
             raise ValueError(f"Expected a non-empty value for `group_id` but received {group_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._post(
             path_template("/groups/{group_id}/members", group_id=group_id),
             body=maybe_transform({"contact_id": contact_id}, member_add_params.MemberAddParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MemberAddResponse,
+            cast_to=NoneType,
         )
 
     def remove(
@@ -150,7 +149,7 @@ class MembersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MemberRemoveResponse:
+    ) -> None:
         """
         ⚠️ **COMING SOON** - This endpoint is temporarily disabled while we stabilize
         this feature.
@@ -172,12 +171,13 @@ class MembersResource(SyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `group_id` but received {group_id!r}")
         if not contact_id:
             raise ValueError(f"Expected a non-empty value for `contact_id` but received {contact_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._delete(
             path_template("/groups/{group_id}/members/{contact_id}", group_id=group_id, contact_id=contact_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MemberRemoveResponse,
+            cast_to=NoneType,
         )
 
 
@@ -267,7 +267,7 @@ class AsyncMembersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MemberAddResponse:
+    ) -> None:
         """
         ⚠️ **COMING SOON** - This endpoint is temporarily disabled while we stabilize
         this feature.
@@ -288,13 +288,14 @@ class AsyncMembersResource(AsyncAPIResource):
         """
         if not group_id:
             raise ValueError(f"Expected a non-empty value for `group_id` but received {group_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._post(
             path_template("/groups/{group_id}/members", group_id=group_id),
             body=await async_maybe_transform({"contact_id": contact_id}, member_add_params.MemberAddParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MemberAddResponse,
+            cast_to=NoneType,
         )
 
     async def remove(
@@ -308,7 +309,7 @@ class AsyncMembersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> MemberRemoveResponse:
+    ) -> None:
         """
         ⚠️ **COMING SOON** - This endpoint is temporarily disabled while we stabilize
         this feature.
@@ -330,12 +331,13 @@ class AsyncMembersResource(AsyncAPIResource):
             raise ValueError(f"Expected a non-empty value for `group_id` but received {group_id!r}")
         if not contact_id:
             raise ValueError(f"Expected a non-empty value for `contact_id` but received {contact_id!r}")
+        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._delete(
             path_template("/groups/{group_id}/members/{contact_id}", group_id=group_id, contact_id=contact_id),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=MemberRemoveResponse,
+            cast_to=NoneType,
         )
 
 
