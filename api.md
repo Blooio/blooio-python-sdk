@@ -90,15 +90,9 @@ Methods:
 
 # Facetime
 
-Types:
-
-```python
-from blooio.types import FacetimeInitiateCallResponse
-```
-
 Methods:
 
-- <code title="post /facetime/calls">client.facetime.<a href="./src/blooio/resources/facetime.py">initiate_call</a>(\*\*<a href="src/blooio/types/facetime_initiate_call_params.py">params</a>) -> <a href="./src/blooio/types/facetime_initiate_call_response.py">FacetimeInitiateCallResponse</a></code>
+- <code title="post /facetime/calls">client.facetime.<a href="./src/blooio/resources/facetime.py">initiate_call</a>(\*\*<a href="src/blooio/types/facetime_initiate_call_params.py">params</a>) -> None</code>
 
 # Groups
 
@@ -127,19 +121,14 @@ Methods:
 Types:
 
 ```python
-from blooio.types.groups import (
-    GroupMember,
-    MemberListResponse,
-    MemberAddResponse,
-    MemberRemoveResponse,
-)
+from blooio.types.groups import GroupMember, MemberListResponse
 ```
 
 Methods:
 
 - <code title="get /groups/{groupId}/members">client.groups.members.<a href="./src/blooio/resources/groups/members.py">list</a>(group_id, \*\*<a href="src/blooio/types/groups/member_list_params.py">params</a>) -> <a href="./src/blooio/types/groups/member_list_response.py">MemberListResponse</a></code>
-- <code title="post /groups/{groupId}/members">client.groups.members.<a href="./src/blooio/resources/groups/members.py">add</a>(group_id, \*\*<a href="src/blooio/types/groups/member_add_params.py">params</a>) -> <a href="./src/blooio/types/groups/member_add_response.py">MemberAddResponse</a></code>
-- <code title="delete /groups/{groupId}/members/{contactId}">client.groups.members.<a href="./src/blooio/resources/groups/members.py">remove</a>(contact_id, \*, group_id) -> <a href="./src/blooio/types/groups/member_remove_response.py">MemberRemoveResponse</a></code>
+- <code title="post /groups/{groupId}/members">client.groups.members.<a href="./src/blooio/resources/groups/members.py">add</a>(group_id, \*\*<a href="src/blooio/types/groups/member_add_params.py">params</a>) -> None</code>
+- <code title="delete /groups/{groupId}/members/{contactId}">client.groups.members.<a href="./src/blooio/resources/groups/members.py">remove</a>(contact_id, \*, group_id) -> None</code>
 
 ## Icon
 
