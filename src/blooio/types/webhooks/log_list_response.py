@@ -39,6 +39,22 @@ class LogEventBody(BaseModel):
     attachments: Optional[List[LogEventBodyAttachment]] = None
     """Array of attachment objects"""
 
+    chat_guid: Optional[str] = None
+    """
+    The device's own identifier for the group conversation this message arrived in
+    (only on `message.received` when is_group=true). Two group chats can hold the
+    same members and are then indistinguishable by `group_id` and `participants`
+    alone; `chat_guid` is what tells them apart. Matches the `chat_guid` on GET
+    /groups/{groupId}.
+    """
+
+    chat_name: Optional[str] = None
+    """
+    The name the device reports for the conversation (only on `message.received`
+    when is_group=true). May differ from `group_name`, or be present when
+    `group_name` is null.
+    """
+
     delivered_at: Optional[int] = None
     """Timestamp when message was delivered (for message.delivered events)"""
 
@@ -73,7 +89,11 @@ class LogEventBody(BaseModel):
     """Unique message identifier"""
 
     participants: Optional[List[LogEventBodyParticipant]] = None
-    """Array of group participants (only present when is_group=true)"""
+    """Array of group participants (only present when is_group=true).
+
+    One entry per person: a participant appears once even if Blooio holds more than
+    one identity for their number.
+    """
 
     protocol: Optional[Literal["pending", "unknown", "imessage", "sms", "rcs"]] = None
     """Transport used to carry the message; never null.
