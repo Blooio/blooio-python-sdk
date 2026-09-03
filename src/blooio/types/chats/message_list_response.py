@@ -44,6 +44,26 @@ class Message(BaseModel):
     external_id: Optional[str] = None
     """Phone number or email of the contact, or group ID for group messages"""
 
+    formatted_text: Optional[str] = None
+    """Markdown for a rich-text (bold/italic/underline/strikethrough) message.
+
+    Omitted entirely when the message carries no styling, so its presence is how you
+    detect rich text.
+
+    Present in both directions: on an outbound send made with `format: "markdown"`,
+    and on an inbound iMessage whose sender styled their text — so styling a
+    customer applied in Messages arrives here even though your integration never
+    asked for it.
+
+    Always a normalized re-serialization of the message's actual styling rather than
+    an echo of the source string: bold is spelled `**`, italic `*`, underline `++`,
+    strikethrough `~~`, and any character that would otherwise read as a delimiter
+    is backslash-escaped. Re-sending this value verbatim with `format: "markdown"`
+    reproduces the same styled message. Blooio iMessage only. This is the SAME field
+    delivered on the message webhooks, so a message reads identically via REST or
+    webhook.
+    """
+
     internal_id: Optional[str] = None
     """Organization phone number (from-number) used for this message"""
 

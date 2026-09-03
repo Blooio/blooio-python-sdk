@@ -74,6 +74,48 @@ class MessageSendParams(TypedDict, total=False):
       effect.
     """
 
+    format: Literal["plain", "markdown"]
+    """How to interpret `text` (and each `parts[].text`).
+
+    Defaults to `plain`, which sends the string exactly as given.
+
+    With `markdown`, four constructs are parsed and delivered as real iMessage rich
+    text — the recipient sees styled text, not delimiters:
+
+    | Construct     | Syntax                   |
+    | ------------- | ------------------------ |
+    | Bold          | `**bold**` or `__bold__` |
+    | Italic        | `*italic*` or `_italic_` |
+    | Underline     | `++underline++`          |
+    | Strikethrough | `~~strike~~`             |
+
+    They nest freely (`**bold and _italic_**`). Everything else Markdown can express
+    — headings, lists, links, code spans, blockquotes, images — is NOT styling
+    iMessage can carry, so it is passed through as literal characters:
+    `[Blooio](https://blooio.com)` is delivered with its brackets and URL intact,
+    and `# Heading` keeps its `#`. Escape a delimiter with a backslash
+    (`\\**not italic\\**`) to send it literally.
+
+    The styling travels in the message's attributed body, so the stored `text` and
+    the `text` returned on reads and webhooks is always the plain string the
+    recipient sees, with the delimiters removed. The Markdown itself comes back as
+    `formatted_text`, re-serialized into a normalized spelling rather than echoed
+    verbatim (`__bold__` returns as `**bold**`).
+
+    Only valid on Blooio iMessage channels —
+    `400 format_unsupported_for_channel_type` on any other channel type, since no
+    other channel type has a rich-text equivalent and would otherwise deliver your
+    delimiters as literal text. Rich text also requires the message to be delivered
+    over iMessage: a Blooio send that falls back to SMS arrives as unstyled plain
+    text (the `text` string), because SMS cannot carry styling.
+
+    Applies to a text send and to `parts`. Rejected with `400 invalid_content` when
+    combined with `attachments` — a media caption is not a styled bubble, so send
+    the media and the styled text as two messages — when set without `text` or
+    `parts`, when the Markdown source exceeds 20000 characters, or when it compiles
+    to more than 256 distinct formatting ranges.
+    """
+
     from_number: str
     """E.164 phone number to send from.
 
