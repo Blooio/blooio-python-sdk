@@ -1,5 +1,35 @@
 # Changelog
 
+## 1.3.0 (2026-09-03)
+
+Full Changelog: [v1.2.0...v1.3.0](https://github.com/Blooio/blooio-python-sdk/compare/v1.2.0...v1.3.0)
+
+### Features
+
+* **api:** api update ([b2d50ea](https://github.com/Blooio/blooio-python-sdk/commit/b2d50ea9ab22a13e8538ceff4193e5267992cc85))
+* **api:** api update ([d519459](https://github.com/Blooio/blooio-python-sdk/commit/d519459512a1adfa7a3caf17d534989f1769a0c2))
+* **api:** api update ([e423382](https://github.com/Blooio/blooio-python-sdk/commit/e4233820761194e86157825cb2fd1aa3925357da))
+* **api:** api update ([cf471a5](https://github.com/Blooio/blooio-python-sdk/commit/cf471a562375341931981795ed31394d650718c0))
+* **api:** api update ([c8e6827](https://github.com/Blooio/blooio-python-sdk/commit/c8e68277578cd19811353635d943a5589c705a30))
+* **api:** api update ([f725a2a](https://github.com/Blooio/blooio-python-sdk/commit/f725a2a9f09573cd3f72b6d0457a9eb807f2ddd9))
+* **api:** api update ([ef1df40](https://github.com/Blooio/blooio-python-sdk/commit/ef1df408e0298e430c14a26942564e5a77aa259c))
+* **api:** api update ([30e8dd1](https://github.com/Blooio/blooio-python-sdk/commit/30e8dd13b8e2ca5988573a2cc482c122ea1650ae))
+* **api:** api update ([f6caf8e](https://github.com/Blooio/blooio-python-sdk/commit/f6caf8e2ab1630818c57ab8142a5107cc534c57c))
+* **api:** api update ([b3ba795](https://github.com/Blooio/blooio-python-sdk/commit/b3ba7951d022e732ae0e3a458520ed3f42a49a5f))
+* **api:** api update ([d9b82ea](https://github.com/Blooio/blooio-python-sdk/commit/d9b82ea21659239202fb8a4d63366d54ea60fcbe))
+* **api:** api update ([2e075ad](https://github.com/Blooio/blooio-python-sdk/commit/2e075ad61159d021fc31bd6fda9f0152ea703a34))
+* **api:** api update ([178129e](https://github.com/Blooio/blooio-python-sdk/commit/178129ec16b48bb7be95b672071147fb1a4bf679))
+* **api:** api update ([03aecef](https://github.com/Blooio/blooio-python-sdk/commit/03aecefb518d40f36c37d71cfa7637cefb0575c4))
+* **api:** api update ([e4708cb](https://github.com/Blooio/blooio-python-sdk/commit/e4708cb01510e75961ac6a058308140cf69424ee))
+* **api:** api update ([bb8074b](https://github.com/Blooio/blooio-python-sdk/commit/bb8074b817bc550cba91e705ebbd710dee71caba))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([33ac236](https://github.com/Blooio/blooio-python-sdk/commit/33ac236b6e204193681f2db4822517a0de75b182))
+
+
+### Bug Fixes
+
+* **auth:** prioritize first auth header ([d692d48](https://github.com/Blooio/blooio-python-sdk/commit/d692d48a74bebaa8b86c6e645941c85ebab88c2e))
+* **internal:** resolve build failures ([12fb122](https://github.com/Blooio/blooio-python-sdk/commit/12fb122bc963ca30ba0d2767352d2f3fde733bfb))
+
 ## 1.2.0 (2026-05-14)
 
 Full Changelog: [v1.1.1...v1.2.0](https://github.com/Blooio/blooio-python-sdk/compare/v1.1.1...v1.2.0)
