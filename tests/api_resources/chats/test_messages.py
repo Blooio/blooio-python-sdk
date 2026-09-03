@@ -266,6 +266,7 @@ class TestMessages:
             chat_id="chatId",
             attachments=["string"],
             effect="slam",
+            format="plain",
             from_number="from_number",
             link_preview={
                 "image_url": "https://example.com",
@@ -578,6 +579,7 @@ class TestAsyncMessages:
             chat_id="chatId",
             attachments=["string"],
             effect="slam",
+            format="plain",
             from_number="from_number",
             link_preview={
                 "image_url": "https://example.com",
