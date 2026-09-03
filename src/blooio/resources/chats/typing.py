@@ -56,7 +56,9 @@ class TypingResource(SyncAPIResource):
         """Start the typing indicator for a chat.
 
         The indicator shows the recipient that
-        you are typing.
+        you are typing. Works for both 1:1 chats (pass a phone number or email as
+        `chatId`) and group chats (pass the group ID, e.g. `grp_...`); in a group every
+        participant sees the indicator.
 
         **RCS limitation:** typing indicators are only delivered for iMessage chats —
         the RCS protocol does not carry composing state. Calls against RCS-routed chats
@@ -92,8 +94,11 @@ class TypingResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> TypingResponse:
-        """
-        Stop the typing indicator for a chat.
+        """Stop the typing indicator for a chat.
+
+        Works for both 1:1 chats (pass a phone
+        number or email as `chatId`) and group chats (pass the group ID, e.g.
+        `grp_...`).
 
         **RCS limitation:** typing indicators are only delivered for iMessage chats —
         the RCS protocol does not carry composing state. Calls against RCS-routed chats
@@ -155,7 +160,9 @@ class AsyncTypingResource(AsyncAPIResource):
         """Start the typing indicator for a chat.
 
         The indicator shows the recipient that
-        you are typing.
+        you are typing. Works for both 1:1 chats (pass a phone number or email as
+        `chatId`) and group chats (pass the group ID, e.g. `grp_...`); in a group every
+        participant sees the indicator.
 
         **RCS limitation:** typing indicators are only delivered for iMessage chats —
         the RCS protocol does not carry composing state. Calls against RCS-routed chats
@@ -191,8 +198,11 @@ class AsyncTypingResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> TypingResponse:
-        """
-        Stop the typing indicator for a chat.
+        """Stop the typing indicator for a chat.
+
+        Works for both 1:1 chats (pass a phone
+        number or email as `chatId`) and group chats (pass the group ID, e.g.
+        `grp_...`).
 
         **RCS limitation:** typing indicators are only delivered for iMessage chats —
         the RCS protocol does not carry composing state. Calls against RCS-routed chats

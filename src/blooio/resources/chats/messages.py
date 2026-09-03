@@ -105,12 +105,20 @@ class MessagesResource(SyncAPIResource):
         """
         List all messages in a conversation with optional filtering.
 
+        A conversation must already exist: this returns `404` for an address the
+        organization has never exchanged a message with, rather than an empty list. Use
+        `GET /chats` to enumerate the conversations that do exist.
+
         Args:
           direction: Filter by message direction
 
-          limit: Maximum number of items to return (1-200)
+          limit: Maximum number of items to return in a single response. Must be between 1 and
+              200; defaults to 50. Use together with `offset` to page through large result
+              sets.
 
-          offset: Number of items to skip
+          offset: Number of items to skip before returning results. Combine with `limit` for
+              page-based pagination (e.g. `offset=50&limit=50` returns the second page).
+              Defaults to 0.
 
           since: Only messages sent after this timestamp (ms)
 
@@ -209,8 +217,6 @@ class MessagesResource(SyncAPIResource):
         (-1 for last message, -2 for second-to-last, etc.). When using relative indices,
         you can optionally filter by message direction (inbound/outbound only).
 
-        Emoji reactions require macOS 14 (Sonoma) or later on the device.
-
         Args:
           reaction: The reaction to add or remove. Must be prefixed with `+` to add or `-` to
               remove.
@@ -220,7 +226,7 @@ class MessagesResource(SyncAPIResource):
               `-question`
 
               **Emoji reactions:** Any emoji prefixed with `+` or `-` (e.g. `+😂`, `-😂`,
-              `+👍`, `-🔥`). Emoji reactions require macOS 14 (Sonoma) or later on the device.
+              `+👍`, `-🔥`).
 
           direction: Filter by message direction (only used when messageId is a relative index like
               -1, -2)
@@ -275,9 +281,11 @@ class MessagesResource(SyncAPIResource):
             ]
         ]
         | Omit = omit,
+        format: Literal["plain", "markdown"] | Omit = omit,
         from_number: str | Omit = omit,
         link_preview: Optional[LinkPreviewParam] | Omit = omit,
         parts: Iterable[message_send_params.Part] | Omit = omit,
+        reply_to: Optional[message_send_params.ReplyTo] | Omit = omit,
         share_contact: bool | Omit = omit,
         text: Union[str, SequenceNotStr[str]] | Omit = omit,
         use_typing_indicator: bool | Omit = omit,
@@ -304,8 +312,28 @@ class MessagesResource(SyncAPIResource):
         message is delivered without the animation. Effects are not supported in
         multipart (`parts`) mode.
 
+        **Threaded replies (iMessage inline reply):** set the optional `reply_to` field
+        to send the outgoing message as a reply to a specific earlier message. Two
+        shapes are accepted: `{ "message_id": "msg_…" }` references a Blooio-minted
+        message in the same chat (most common — the message*id returned by an earlier
+        send or surfaced on a `message.received` webhook), or
+        `{ "guid": "…", "part_index": 0 }` references the raw iMessage GUID for the rare
+        case where the parent wasn't recorded by Blooio. The reply must target the same
+        chat and the same from-number as the new send, and the parent must be no older
+        than 30 days (the iMessage on-device retention horizon). Reply support is
+        iMessage-only and is rejected on Twilio, dashboard-Twilio, and hybrid send
+        paths; it's also rejected on multi-message fan-outs (`text` array or per-part
+        URL-balloon batch). See the `400` responses for the full set of
+        `reply_target*\\**` error codes.
+
         Args:
-          attachments: Array of attachment URLs or objects with url/name
+          attachments: Array of attachment URLs or objects with url/name.
+
+              **Voice memos:** a single audio file (`.mp3`, `.m4a`, `.wav`, `.aac`, `.opus`,
+              `.ogg`) is automatically sent as a voice memo (the native waveform/scrubber
+              bubble), not a plain audio-file attachment — no extra field is needed. A voice
+              memo is a standalone bubble, so it cannot be combined with `text` or any other
+              attachment; send the voice memo and the text as two separate messages.
 
           effect: Optional. Attach an iMessage send-with-effect to the outgoing message.
 
@@ -340,6 +368,45 @@ class MessagesResource(SyncAPIResource):
               - When `text` is an array, every message in the array is sent with the same
                 effect.
 
+          format: How to interpret `text` (and each `parts[].text`). Defaults to `plain`, which
+              sends the string exactly as given.
+
+              With `markdown`, four constructs are parsed and delivered as real iMessage rich
+              text — the recipient sees styled text, not delimiters:
+
+              | Construct     | Syntax                   |
+              | ------------- | ------------------------ |
+              | Bold          | `**bold**` or `__bold__` |
+              | Italic        | `*italic*` or `_italic_` |
+              | Underline     | `++underline++`          |
+              | Strikethrough | `~~strike~~`             |
+
+              They nest freely (`**bold and _italic_**`). Everything else Markdown can express
+              — headings, lists, links, code spans, blockquotes, images — is NOT styling
+              iMessage can carry, so it is passed through as literal characters:
+              `[Blooio](https://blooio.com)` is delivered with its brackets and URL intact,
+              and `# Heading` keeps its `#`. Escape a delimiter with a backslash
+              (`\\**not italic\\**`) to send it literally.
+
+              The styling travels in the message's attributed body, so the stored `text` and
+              the `text` returned on reads and webhooks is always the plain string the
+              recipient sees, with the delimiters removed. The Markdown itself comes back as
+              `formatted_text`, re-serialized into a normalized spelling rather than echoed
+              verbatim (`__bold__` returns as `**bold**`).
+
+              Only valid on Blooio iMessage channels —
+              `400 format_unsupported_for_channel_type` on any other channel type, since no
+              other channel type has a rich-text equivalent and would otherwise deliver your
+              delimiters as literal text. Rich text also requires the message to be delivered
+              over iMessage: a Blooio send that falls back to SMS arrives as unstyled plain
+              text (the `text` string), because SMS cannot carry styling.
+
+              Applies to a text send and to `parts`. Rejected with `400 invalid_content` when
+              combined with `attachments` — a media caption is not a styled bubble, so send
+              the media and the styled text as two messages — when set without `text` or
+              `parts`, when the Markdown source exceeds 20000 characters, or when it compiles
+              to more than 256 distinct formatting ranges.
+
           from_number: E.164 phone number to send from. For Twilio API keys, this is optional — if
               omitted, the first assigned Twilio number is auto-selected. For Blooio
               (iMessage) API keys, this selects a specific number from your pool. Must be a
@@ -363,8 +430,17 @@ class MessagesResource(SyncAPIResource):
                  `text` being a single http(s) URL. Response contains `message_ids[]` +
                  `count` instead of `message_id`.
 
+          reply_to: Inline-reply target on `POST /chats/{chatId}/messages`. Pass either `message_id`
+              (preferred — references a Blooio-minted message) or `guid` (raw iMessage GUID,
+              useful for replying to messages received before the row was minted in Blooio).
+              The new send is dispatched to Lava with the resolved `selectedMessageGuid` +
+              `partIndex`, which iMessage renders as an inline reply on the recipient's
+              device.
+
           share_contact: If true, the contact card (Name & Photo) will be shared with this message. The
-              contact card is piggybacked onto the outgoing message. Defaults to false.
+              contact card is piggybacked onto the outgoing message. Defaults to false. ⚠️
+              Only available on **Dedicated Commercial** and **Dedicated Enterprise** plans —
+              other plans receive a `403`.
 
           text: Message text. Can be a single string or array of strings (each becomes a
               separate message)
@@ -388,9 +464,11 @@ class MessagesResource(SyncAPIResource):
                 {
                     "attachments": attachments,
                     "effect": effect,
+                    "format": format,
                     "from_number": from_number,
                     "link_preview": link_preview,
                     "parts": parts,
+                    "reply_to": reply_to,
                     "share_contact": share_contact,
                     "text": text,
                     "use_typing_indicator": use_typing_indicator,
@@ -480,12 +558,20 @@ class AsyncMessagesResource(AsyncAPIResource):
         """
         List all messages in a conversation with optional filtering.
 
+        A conversation must already exist: this returns `404` for an address the
+        organization has never exchanged a message with, rather than an empty list. Use
+        `GET /chats` to enumerate the conversations that do exist.
+
         Args:
           direction: Filter by message direction
 
-          limit: Maximum number of items to return (1-200)
+          limit: Maximum number of items to return in a single response. Must be between 1 and
+              200; defaults to 50. Use together with `offset` to page through large result
+              sets.
 
-          offset: Number of items to skip
+          offset: Number of items to skip before returning results. Combine with `limit` for
+              page-based pagination (e.g. `offset=50&limit=50` returns the second page).
+              Defaults to 0.
 
           since: Only messages sent after this timestamp (ms)
 
@@ -584,8 +670,6 @@ class AsyncMessagesResource(AsyncAPIResource):
         (-1 for last message, -2 for second-to-last, etc.). When using relative indices,
         you can optionally filter by message direction (inbound/outbound only).
 
-        Emoji reactions require macOS 14 (Sonoma) or later on the device.
-
         Args:
           reaction: The reaction to add or remove. Must be prefixed with `+` to add or `-` to
               remove.
@@ -595,7 +679,7 @@ class AsyncMessagesResource(AsyncAPIResource):
               `-question`
 
               **Emoji reactions:** Any emoji prefixed with `+` or `-` (e.g. `+😂`, `-😂`,
-              `+👍`, `-🔥`). Emoji reactions require macOS 14 (Sonoma) or later on the device.
+              `+👍`, `-🔥`).
 
           direction: Filter by message direction (only used when messageId is a relative index like
               -1, -2)
@@ -650,9 +734,11 @@ class AsyncMessagesResource(AsyncAPIResource):
             ]
         ]
         | Omit = omit,
+        format: Literal["plain", "markdown"] | Omit = omit,
         from_number: str | Omit = omit,
         link_preview: Optional[LinkPreviewParam] | Omit = omit,
         parts: Iterable[message_send_params.Part] | Omit = omit,
+        reply_to: Optional[message_send_params.ReplyTo] | Omit = omit,
         share_contact: bool | Omit = omit,
         text: Union[str, SequenceNotStr[str]] | Omit = omit,
         use_typing_indicator: bool | Omit = omit,
@@ -679,8 +765,28 @@ class AsyncMessagesResource(AsyncAPIResource):
         message is delivered without the animation. Effects are not supported in
         multipart (`parts`) mode.
 
+        **Threaded replies (iMessage inline reply):** set the optional `reply_to` field
+        to send the outgoing message as a reply to a specific earlier message. Two
+        shapes are accepted: `{ "message_id": "msg_…" }` references a Blooio-minted
+        message in the same chat (most common — the message*id returned by an earlier
+        send or surfaced on a `message.received` webhook), or
+        `{ "guid": "…", "part_index": 0 }` references the raw iMessage GUID for the rare
+        case where the parent wasn't recorded by Blooio. The reply must target the same
+        chat and the same from-number as the new send, and the parent must be no older
+        than 30 days (the iMessage on-device retention horizon). Reply support is
+        iMessage-only and is rejected on Twilio, dashboard-Twilio, and hybrid send
+        paths; it's also rejected on multi-message fan-outs (`text` array or per-part
+        URL-balloon batch). See the `400` responses for the full set of
+        `reply_target*\\**` error codes.
+
         Args:
-          attachments: Array of attachment URLs or objects with url/name
+          attachments: Array of attachment URLs or objects with url/name.
+
+              **Voice memos:** a single audio file (`.mp3`, `.m4a`, `.wav`, `.aac`, `.opus`,
+              `.ogg`) is automatically sent as a voice memo (the native waveform/scrubber
+              bubble), not a plain audio-file attachment — no extra field is needed. A voice
+              memo is a standalone bubble, so it cannot be combined with `text` or any other
+              attachment; send the voice memo and the text as two separate messages.
 
           effect: Optional. Attach an iMessage send-with-effect to the outgoing message.
 
@@ -715,6 +821,45 @@ class AsyncMessagesResource(AsyncAPIResource):
               - When `text` is an array, every message in the array is sent with the same
                 effect.
 
+          format: How to interpret `text` (and each `parts[].text`). Defaults to `plain`, which
+              sends the string exactly as given.
+
+              With `markdown`, four constructs are parsed and delivered as real iMessage rich
+              text — the recipient sees styled text, not delimiters:
+
+              | Construct     | Syntax                   |
+              | ------------- | ------------------------ |
+              | Bold          | `**bold**` or `__bold__` |
+              | Italic        | `*italic*` or `_italic_` |
+              | Underline     | `++underline++`          |
+              | Strikethrough | `~~strike~~`             |
+
+              They nest freely (`**bold and _italic_**`). Everything else Markdown can express
+              — headings, lists, links, code spans, blockquotes, images — is NOT styling
+              iMessage can carry, so it is passed through as literal characters:
+              `[Blooio](https://blooio.com)` is delivered with its brackets and URL intact,
+              and `# Heading` keeps its `#`. Escape a delimiter with a backslash
+              (`\\**not italic\\**`) to send it literally.
+
+              The styling travels in the message's attributed body, so the stored `text` and
+              the `text` returned on reads and webhooks is always the plain string the
+              recipient sees, with the delimiters removed. The Markdown itself comes back as
+              `formatted_text`, re-serialized into a normalized spelling rather than echoed
+              verbatim (`__bold__` returns as `**bold**`).
+
+              Only valid on Blooio iMessage channels —
+              `400 format_unsupported_for_channel_type` on any other channel type, since no
+              other channel type has a rich-text equivalent and would otherwise deliver your
+              delimiters as literal text. Rich text also requires the message to be delivered
+              over iMessage: a Blooio send that falls back to SMS arrives as unstyled plain
+              text (the `text` string), because SMS cannot carry styling.
+
+              Applies to a text send and to `parts`. Rejected with `400 invalid_content` when
+              combined with `attachments` — a media caption is not a styled bubble, so send
+              the media and the styled text as two messages — when set without `text` or
+              `parts`, when the Markdown source exceeds 20000 characters, or when it compiles
+              to more than 256 distinct formatting ranges.
+
           from_number: E.164 phone number to send from. For Twilio API keys, this is optional — if
               omitted, the first assigned Twilio number is auto-selected. For Blooio
               (iMessage) API keys, this selects a specific number from your pool. Must be a
@@ -738,8 +883,17 @@ class AsyncMessagesResource(AsyncAPIResource):
                  `text` being a single http(s) URL. Response contains `message_ids[]` +
                  `count` instead of `message_id`.
 
+          reply_to: Inline-reply target on `POST /chats/{chatId}/messages`. Pass either `message_id`
+              (preferred — references a Blooio-minted message) or `guid` (raw iMessage GUID,
+              useful for replying to messages received before the row was minted in Blooio).
+              The new send is dispatched to Lava with the resolved `selectedMessageGuid` +
+              `partIndex`, which iMessage renders as an inline reply on the recipient's
+              device.
+
           share_contact: If true, the contact card (Name & Photo) will be shared with this message. The
-              contact card is piggybacked onto the outgoing message. Defaults to false.
+              contact card is piggybacked onto the outgoing message. Defaults to false. ⚠️
+              Only available on **Dedicated Commercial** and **Dedicated Enterprise** plans —
+              other plans receive a `403`.
 
           text: Message text. Can be a single string or array of strings (each becomes a
               separate message)
@@ -763,9 +917,11 @@ class AsyncMessagesResource(AsyncAPIResource):
                 {
                     "attachments": attachments,
                     "effect": effect,
+                    "format": format,
                     "from_number": from_number,
                     "link_preview": link_preview,
                     "parts": parts,
+                    "reply_to": reply_to,
                     "share_contact": share_contact,
                     "text": text,
                     "use_typing_indicator": use_typing_indicator,

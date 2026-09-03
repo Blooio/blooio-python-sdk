@@ -67,13 +67,17 @@ class LogsResource(SyncAPIResource):
         List delivery logs for a specific webhook.
 
         Args:
-          limit: Maximum number of items to return (1-200)
+          limit: Maximum number of items to return in a single response. Must be between 1 and
+              200; defaults to 50. Use together with `offset` to page through large result
+              sets.
 
           max_status: Maximum HTTP status code
 
           min_status: Minimum HTTP status code
 
-          offset: Number of items to skip
+          offset: Number of items to skip before returning results. Combine with `limit` for
+              page-based pagination (e.g. `offset=50&limit=50` returns the second page).
+              Defaults to 0.
 
           sort: Sort order by attempted time
 
@@ -191,13 +195,17 @@ class AsyncLogsResource(AsyncAPIResource):
         List delivery logs for a specific webhook.
 
         Args:
-          limit: Maximum number of items to return (1-200)
+          limit: Maximum number of items to return in a single response. Must be between 1 and
+              200; defaults to 50. Use together with `offset` to page through large result
+              sets.
 
           max_status: Maximum HTTP status code
 
           min_status: Minimum HTTP status code
 
-          offset: Number of items to skip
+          offset: Number of items to skip before returning results. Combine with `limit` for
+              page-based pagination (e.g. `offset=50&limit=50` returns the second page).
+              Defaults to 0.
 
           sort: Sort order by attempted time
 

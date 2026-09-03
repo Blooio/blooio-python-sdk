@@ -8,8 +8,6 @@ from typing import Any, cast
 import pytest
 
 from blooio import Blooio, AsyncBlooio
-from tests.utils import assert_matches_type
-from blooio.types import FacetimeInitiateCallResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -23,7 +21,7 @@ class TestFacetime:
         facetime = client.facetime.initiate_call(
             handle="+15551234567",
         )
-        assert_matches_type(FacetimeInitiateCallResponse, facetime, path=["response"])
+        assert facetime is None
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -35,7 +33,7 @@ class TestFacetime:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         facetime = response.parse()
-        assert_matches_type(FacetimeInitiateCallResponse, facetime, path=["response"])
+        assert facetime is None
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -47,7 +45,7 @@ class TestFacetime:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             facetime = response.parse()
-            assert_matches_type(FacetimeInitiateCallResponse, facetime, path=["response"])
+            assert facetime is None
 
         assert cast(Any, response.is_closed) is True
 
@@ -63,7 +61,7 @@ class TestAsyncFacetime:
         facetime = await async_client.facetime.initiate_call(
             handle="+15551234567",
         )
-        assert_matches_type(FacetimeInitiateCallResponse, facetime, path=["response"])
+        assert facetime is None
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -75,7 +73,7 @@ class TestAsyncFacetime:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         facetime = await response.parse()
-        assert_matches_type(FacetimeInitiateCallResponse, facetime, path=["response"])
+        assert facetime is None
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -87,6 +85,6 @@ class TestAsyncFacetime:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             facetime = await response.parse()
-            assert_matches_type(FacetimeInitiateCallResponse, facetime, path=["response"])
+            assert facetime is None
 
         assert cast(Any, response.is_closed) is True

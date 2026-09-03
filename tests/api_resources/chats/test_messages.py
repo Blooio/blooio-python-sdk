@@ -266,6 +266,7 @@ class TestMessages:
             chat_id="chatId",
             attachments=["string"],
             effect="slam",
+            format="plain",
             from_number="from_number",
             link_preview={
                 "image_url": "https://example.com",
@@ -283,6 +284,11 @@ class TestMessages:
                     "url": "url",
                 }
             ],
+            reply_to={
+                "guid": "guid",
+                "message_id": "message_id",
+                "part_index": 0,
+            },
             share_contact=True,
             text="string",
             use_typing_indicator=True,
@@ -573,6 +579,7 @@ class TestAsyncMessages:
             chat_id="chatId",
             attachments=["string"],
             effect="slam",
+            format="plain",
             from_number="from_number",
             link_preview={
                 "image_url": "https://example.com",
@@ -590,6 +597,11 @@ class TestAsyncMessages:
                     "url": "url",
                 }
             ],
+            reply_to={
+                "guid": "guid",
+                "message_id": "message_id",
+                "part_index": 0,
+            },
             share_contact=True,
             text="string",
             use_typing_indicator=True,

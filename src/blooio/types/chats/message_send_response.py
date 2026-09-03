@@ -30,8 +30,21 @@ class MessageSendResponse(BaseModel):
     (URL-balloon batch mode).
     """
 
+    parent_unresolved: Optional[bool] = None
+    """
+    Present (and `true`) only when `reply_to.guid` was supplied without a
+    `message_id` and the GUID didn't map to any Blooio-minted row. The send still
+    proceeds and the device may still thread it; this flag signals that Blooio
+    couldn't link the new message to a known parent.
+    """
+
     participants: Optional[List[str]] = None
     """List of participants (present for multi-recipient)"""
 
     status: Optional[Literal["queued", "failed"]] = None
-    """Initial status of the message(s)"""
+    """Initial status of the message(s).
+
+    `queued` = accepted for delivery (the normal 202 result); `failed` = rejected
+    before dispatch. Subsequent transitions (`sent` → `delivered`, or `failed`) are
+    reported via the status endpoint and `message.status` webhooks.
+    """

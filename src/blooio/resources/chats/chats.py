@@ -78,7 +78,7 @@ class ChatsResource(SyncAPIResource):
 
     @cached_property
     def background(self) -> BackgroundResource:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return BackgroundResource(self._client)
 
     @cached_property
@@ -152,9 +152,13 @@ class ChatsResource(SyncAPIResource):
         message.
 
         Args:
-          limit: Maximum number of items to return (1-200)
+          limit: Maximum number of items to return in a single response. Must be between 1 and
+              200; defaults to 50. Use together with `offset` to page through large result
+              sets.
 
-          offset: Number of items to skip
+          offset: Number of items to skip before returning results. Combine with `limit` for
+              page-based pagination (e.g. `offset=50&limit=50` returns the second page).
+              Defaults to 0.
 
           q: Search query (matches phone/email or contact name)
 
@@ -239,6 +243,10 @@ class ChatsResource(SyncAPIResource):
         will be piggybacked onto the next outgoing message (text or attachment) sent to
         this chat. This is idempotent — calling it multiple times is harmless.
 
+        ⚠️ **Plan requirement:** Contact card sharing is only available on **Dedicated
+        Commercial** and **Dedicated Enterprise** plans. Numbers on other plans receive
+        a `403`.
+
         Args:
           extra_headers: Send extra headers
 
@@ -279,7 +287,7 @@ class AsyncChatsResource(AsyncAPIResource):
 
     @cached_property
     def background(self) -> AsyncBackgroundResource:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return AsyncBackgroundResource(self._client)
 
     @cached_property
@@ -353,9 +361,13 @@ class AsyncChatsResource(AsyncAPIResource):
         message.
 
         Args:
-          limit: Maximum number of items to return (1-200)
+          limit: Maximum number of items to return in a single response. Must be between 1 and
+              200; defaults to 50. Use together with `offset` to page through large result
+              sets.
 
-          offset: Number of items to skip
+          offset: Number of items to skip before returning results. Combine with `limit` for
+              page-based pagination (e.g. `offset=50&limit=50` returns the second page).
+              Defaults to 0.
 
           q: Search query (matches phone/email or contact name)
 
@@ -440,6 +452,10 @@ class AsyncChatsResource(AsyncAPIResource):
         will be piggybacked onto the next outgoing message (text or attachment) sent to
         this chat. This is idempotent — calling it multiple times is harmless.
 
+        ⚠️ **Plan requirement:** Contact card sharing is only available on **Dedicated
+        Commercial** and **Dedicated Enterprise** plans. Numbers on other plans receive
+        a `403`.
+
         Args:
           extra_headers: Send extra headers
 
@@ -496,7 +512,7 @@ class ChatsResourceWithRawResponse:
 
     @cached_property
     def background(self) -> BackgroundResourceWithRawResponse:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return BackgroundResourceWithRawResponse(self._chats.background)
 
 
@@ -536,7 +552,7 @@ class AsyncChatsResourceWithRawResponse:
 
     @cached_property
     def background(self) -> AsyncBackgroundResourceWithRawResponse:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return AsyncBackgroundResourceWithRawResponse(self._chats.background)
 
 
@@ -576,7 +592,7 @@ class ChatsResourceWithStreamingResponse:
 
     @cached_property
     def background(self) -> BackgroundResourceWithStreamingResponse:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return BackgroundResourceWithStreamingResponse(self._chats.background)
 
 
@@ -616,5 +632,5 @@ class AsyncChatsResourceWithStreamingResponse:
 
     @cached_property
     def background(self) -> AsyncBackgroundResourceWithStreamingResponse:
-        """Set, get, and remove conversation backgrounds"""
+        """View conversations and messages"""
         return AsyncBackgroundResourceWithStreamingResponse(self._chats.background)

@@ -39,6 +39,22 @@ class LogEventBody(BaseModel):
     attachments: Optional[List[LogEventBodyAttachment]] = None
     """Array of attachment objects"""
 
+    chat_guid: Optional[str] = None
+    """
+    The device's own identifier for the group conversation this message arrived in
+    (only on `message.received` when is_group=true). Two group chats can hold the
+    same members and are then indistinguishable by `group_id` and `participants`
+    alone; `chat_guid` is what tells them apart. Matches the `chat_guid` on GET
+    /groups/{groupId}.
+    """
+
+    chat_name: Optional[str] = None
+    """
+    The name the device reports for the conversation (only on `message.received`
+    when is_group=true). May differ from `group_name`, or be present when
+    `group_name` is null.
+    """
+
     delivered_at: Optional[int] = None
     """Timestamp when message was delivered (for message.delivered events)"""
 
@@ -57,6 +73,26 @@ class LogEventBody(BaseModel):
     external_id: Optional[str] = None
     """Recipient identifier (phone number, email, or group ID)"""
 
+    formatted_text: Optional[str] = None
+    """Markdown for a rich-text (bold/italic/underline/strikethrough) message.
+
+    Omitted entirely when the message carries no styling, so its presence is how you
+    detect rich text.
+
+    Present in both directions: on an outbound send made with `format: "markdown"`,
+    and on an inbound iMessage whose sender styled their text — so styling a
+    customer applied in Messages arrives here even though your integration never
+    asked for it.
+
+    Always a normalized re-serialization of the message's actual styling rather than
+    an echo of the source string: bold is spelled `**`, italic `*`, underline `++`,
+    strikethrough `~~`, and any character that would otherwise read as a delimiter
+    is backslash-escaped. Re-sending this value verbatim with `format: "markdown"`
+    reproduces the same styled message. Blooio iMessage only. This is the SAME field
+    delivered on the message webhooks, so a message reads identically via REST or
+    webhook.
+    """
+
     group_id: Optional[str] = None
     """Group ID (only present when is_group=true)"""
 
@@ -73,10 +109,21 @@ class LogEventBody(BaseModel):
     """Unique message identifier"""
 
     participants: Optional[List[LogEventBodyParticipant]] = None
-    """Array of group participants (only present when is_group=true)"""
+    """Array of group participants (only present when is_group=true).
 
-    protocol: Optional[Literal["imessage", "sms", "rcs", "non-imessage"]] = None
-    """Message protocol"""
+    One entry per person: a participant appears once even if Blooio holds more than
+    one identity for their number.
+    """
+
+    protocol: Optional[Literal["pending", "unknown", "imessage", "sms", "rcs"]] = None
+    """Transport used to carry the message; never null.
+
+    `pending` = accepted and dispatched, wire service not resolved yet (settles
+    within seconds of send); `imessage` = delivered over iMessage (blue bubble);
+    `rcs` = delivered over RCS; `sms` = fell back to SMS/MMS (green bubble);
+    `unknown` = accepted by the carrier but the wire service could not be resolved
+    before the tracking window closed (see `error`).
+    """
 
     read_at: Optional[int] = None
     """Timestamp when message was read (for message.read events)"""
@@ -88,7 +135,14 @@ class LogEventBody(BaseModel):
     """Timestamp when message was sent (for message.sent events)"""
 
     status: Optional[Literal["queued", "pending", "sent", "delivered", "failed", "read", "received"]] = None
-    """Message status"""
+    """Message status carried by the event.
+
+    `queued` / `pending` = accepted, not yet handed off; `sent` = handed to
+    Apple/the carrier; `delivered` = a delivery receipt was received; `read` = a
+    read receipt was received (iMessage, when the recipient has read receipts on);
+    `failed` = delivery failed (see `error_code` / `error_message`); `received` = an
+    inbound message arrived.
+    """
 
     text: Optional[str] = None
     """Message text content"""

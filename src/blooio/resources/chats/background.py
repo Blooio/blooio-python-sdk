@@ -25,7 +25,7 @@ __all__ = ["BackgroundResource", "AsyncBackgroundResource"]
 
 
 class BackgroundResource(SyncAPIResource):
-    """Set, get, and remove conversation backgrounds"""
+    """View conversations and messages"""
 
     @cached_property
     def with_raw_response(self) -> BackgroundResourceWithRawResponse:
@@ -132,12 +132,27 @@ class BackgroundResource(SyncAPIResource):
         Works for both 1-on-1 and
         group chats.
 
-        The uploaded image is converted into a PosterKit-compatible archive and applied
-        to the iMessage conversation on the linked device. Supported formats: JPEG, PNG,
-        GIF, WebP, HEIC/HEIF. Maximum file size: 10 MB.
+        The request body must be `multipart/form-data` with a single `background` field
+        containing the **raw image file bytes** (not a URL or base64 string). Supported
+        formats: JPEG, PNG, GIF, WebP, HEIC/HEIF. Maximum file size: 10 MB.
+
+        **Example with curl** — note the `@` prefix that tells curl to read the file
+        from disk:
+
+        ```bash
+        curl -X PUT "https://api.blooio.com/v2/api/chats/%2B15551234567/background" \\
+          -H "Authorization: Bearer YOUR_API_KEY" \\
+          -F "background=@/path/to/image.jpg;type=image/jpeg"
+        ```
+
+        When the chat id is a phone number, percent-encode the leading `+` as `%2B` in
+        the URL path.
 
         Args:
-          background: The image file to set as the chat background
+          background: Binary image file upload (JPEG, PNG, GIF, WebP, HEIC/HEIF, max 10 MB). Send as a
+              file field in `multipart/form-data` — e.g. `-F "background=@/path/to/image.jpg"`
+              with curl, or a `File`/`Blob` appended to `FormData` in JavaScript. Do NOT send
+              a URL or base64 string.
 
           extra_headers: Send extra headers
 
@@ -167,7 +182,7 @@ class BackgroundResource(SyncAPIResource):
 
 
 class AsyncBackgroundResource(AsyncAPIResource):
-    """Set, get, and remove conversation backgrounds"""
+    """View conversations and messages"""
 
     @cached_property
     def with_raw_response(self) -> AsyncBackgroundResourceWithRawResponse:
@@ -274,12 +289,27 @@ class AsyncBackgroundResource(AsyncAPIResource):
         Works for both 1-on-1 and
         group chats.
 
-        The uploaded image is converted into a PosterKit-compatible archive and applied
-        to the iMessage conversation on the linked device. Supported formats: JPEG, PNG,
-        GIF, WebP, HEIC/HEIF. Maximum file size: 10 MB.
+        The request body must be `multipart/form-data` with a single `background` field
+        containing the **raw image file bytes** (not a URL or base64 string). Supported
+        formats: JPEG, PNG, GIF, WebP, HEIC/HEIF. Maximum file size: 10 MB.
+
+        **Example with curl** — note the `@` prefix that tells curl to read the file
+        from disk:
+
+        ```bash
+        curl -X PUT "https://api.blooio.com/v2/api/chats/%2B15551234567/background" \\
+          -H "Authorization: Bearer YOUR_API_KEY" \\
+          -F "background=@/path/to/image.jpg;type=image/jpeg"
+        ```
+
+        When the chat id is a phone number, percent-encode the leading `+` as `%2B` in
+        the URL path.
 
         Args:
-          background: The image file to set as the chat background
+          background: Binary image file upload (JPEG, PNG, GIF, WebP, HEIC/HEIF, max 10 MB). Send as a
+              file field in `multipart/form-data` — e.g. `-F "background=@/path/to/image.jpg"`
+              with curl, or a `File`/`Blob` appended to `FormData` in JavaScript. Do NOT send
+              a URL or base64 string.
 
           extra_headers: Send extra headers
 

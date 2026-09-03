@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import typing_extensions
 from typing_extensions import Literal
 
 import httpx
@@ -74,12 +75,12 @@ class WebhooksResource(SyncAPIResource):
         """
         return WebhooksResourceWithStreamingResponse(self)
 
+    @typing_extensions.deprecated("deprecated")
     def create(
         self,
         *,
         webhook_url: str,
         valid_until: int | Omit = omit,
-        webhook_type: Literal["message", "status", "all"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -87,15 +88,19 @@ class WebhooksResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> WebhookCreateResponse:
-        """
-        Create a new webhook subscription.
+        """Registration through this endpoint is closed and returns 410.
+
+        Use POST
+        /v4/webhooks to create new subscriptions. Existing webhooks keep working and can
+        still be listed, updated, and deleted here. Re-posting the URL of a webhook that
+        already exists still returns 200 with that webhook, so idempotent provisioning
+        scripts continue to work unchanged.
 
         Args:
-          webhook_url: URL to receive webhook events
+          webhook_url: URL of an existing webhook, for the idempotent 200 response. A URL that does not
+              already exist returns 410.
 
-          valid_until: Expiration timestamp (-1 for no expiration)
-
-          webhook_type: Type of events to receive
+          valid_until: Ignored. Retained so existing request bodies stay valid.
 
           extra_headers: Send extra headers
 
@@ -111,7 +116,6 @@ class WebhooksResource(SyncAPIResource):
                 {
                     "webhook_url": webhook_url,
                     "valid_until": valid_until,
-                    "webhook_type": webhook_type,
                 },
                 webhook_create_params.WebhookCreateParams,
             ),
@@ -289,12 +293,12 @@ class AsyncWebhooksResource(AsyncAPIResource):
         """
         return AsyncWebhooksResourceWithStreamingResponse(self)
 
+    @typing_extensions.deprecated("deprecated")
     async def create(
         self,
         *,
         webhook_url: str,
         valid_until: int | Omit = omit,
-        webhook_type: Literal["message", "status", "all"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -302,15 +306,19 @@ class AsyncWebhooksResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> WebhookCreateResponse:
-        """
-        Create a new webhook subscription.
+        """Registration through this endpoint is closed and returns 410.
+
+        Use POST
+        /v4/webhooks to create new subscriptions. Existing webhooks keep working and can
+        still be listed, updated, and deleted here. Re-posting the URL of a webhook that
+        already exists still returns 200 with that webhook, so idempotent provisioning
+        scripts continue to work unchanged.
 
         Args:
-          webhook_url: URL to receive webhook events
+          webhook_url: URL of an existing webhook, for the idempotent 200 response. A URL that does not
+              already exist returns 410.
 
-          valid_until: Expiration timestamp (-1 for no expiration)
-
-          webhook_type: Type of events to receive
+          valid_until: Ignored. Retained so existing request bodies stay valid.
 
           extra_headers: Send extra headers
 
@@ -326,7 +334,6 @@ class AsyncWebhooksResource(AsyncAPIResource):
                 {
                     "webhook_url": webhook_url,
                     "valid_until": valid_until,
-                    "webhook_type": webhook_type,
                 },
                 webhook_create_params.WebhookCreateParams,
             ),
@@ -476,8 +483,10 @@ class WebhooksResourceWithRawResponse:
     def __init__(self, webhooks: WebhooksResource) -> None:
         self._webhooks = webhooks
 
-        self.create = to_raw_response_wrapper(
-            webhooks.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            to_raw_response_wrapper(
+                webhooks.create,  # pyright: ignore[reportDeprecated],
+            )
         )
         self.retrieve = to_raw_response_wrapper(
             webhooks.retrieve,
@@ -507,8 +516,10 @@ class AsyncWebhooksResourceWithRawResponse:
     def __init__(self, webhooks: AsyncWebhooksResource) -> None:
         self._webhooks = webhooks
 
-        self.create = async_to_raw_response_wrapper(
-            webhooks.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            async_to_raw_response_wrapper(
+                webhooks.create,  # pyright: ignore[reportDeprecated],
+            )
         )
         self.retrieve = async_to_raw_response_wrapper(
             webhooks.retrieve,
@@ -538,8 +549,10 @@ class WebhooksResourceWithStreamingResponse:
     def __init__(self, webhooks: WebhooksResource) -> None:
         self._webhooks = webhooks
 
-        self.create = to_streamed_response_wrapper(
-            webhooks.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            to_streamed_response_wrapper(
+                webhooks.create,  # pyright: ignore[reportDeprecated],
+            )
         )
         self.retrieve = to_streamed_response_wrapper(
             webhooks.retrieve,
@@ -569,8 +582,10 @@ class AsyncWebhooksResourceWithStreamingResponse:
     def __init__(self, webhooks: AsyncWebhooksResource) -> None:
         self._webhooks = webhooks
 
-        self.create = async_to_streamed_response_wrapper(
-            webhooks.create,
+        self.create = (  # pyright: ignore[reportDeprecated]
+            async_to_streamed_response_wrapper(
+                webhooks.create,  # pyright: ignore[reportDeprecated],
+            )
         )
         self.retrieve = async_to_streamed_response_wrapper(
             webhooks.retrieve,
